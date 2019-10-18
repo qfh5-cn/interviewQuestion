@@ -1,4 +1,4 @@
-import React, { Component,createRef } from "react";
+import React, { Component, createRef } from "react";
 import { connect } from "react-redux";
 import {
   Button,
@@ -11,7 +11,8 @@ import {
   Tooltip,
   message,
   Form,
-  Rate
+  Rate,
+  AutoComplete
 } from "antd";
 import MyTags from "@@/MyTags";
 
@@ -28,7 +29,8 @@ class Add extends Component {
   state = {
     category: [],
     addType: "multiple",
-    iqs:[]
+    iqs: [],
+    companyList:['广州千锋互联科技有限公司','测试有限公司']
     // tags: []
     // detail:{},
   };
@@ -45,7 +47,7 @@ class Add extends Component {
     });
   };
   changeCategory = (idx, { key, item }) => {
-    let {iqs} = this.state;
+    let { iqs } = this.state;
     iqs = iqs.map((iq, i) => {
       if (i === idx) {
         iq.category = key;
@@ -66,32 +68,36 @@ class Add extends Component {
     if (!data) return [];
     data = data.trim().replace(/^[\*\d\s]+[、\\，\,\.]?|[？\?。\.；\;]$/gm, "");
     return data.split("\n").map(item => ({
-      question: item,
+      question: item
     }));
   }
-  removeIQ = idx=>{console.log(idx)
-    let {iqs} = this.state;
-    let {form} = this.props;
+  removeIQ = idx => {
+    console.log(idx);
+    let { iqs } = this.state;
+    let { form } = this.props;
     iqs = iqs.filter((item, i) => i != idx);
     this.setState({
       iqs
     });
 
     // 同步输入框内容
-    form.setFieldsValue({iqs:iqs.map(item=>item.question).join('\n')})
-
-  }
+    form.setFieldsValue({ iqs: iqs.map(item => item.question).join("\n") });
+  };
   // data:Array
   addIQ = async iqs => {
-    let { user } = this.props;
-
+    let { user,form } = this.props;
+    console.log(iqs)
     let result = await Api.post("/iq", {
       userid: user._id,
       iqs
     });
     if (result.status === 200) {
       message.success("添加面试题成功", () => {
-        this.forceUpdate();
+        // this.forceUpdate();
+        form.resetFields();
+        this.setState({
+          iqs:[]
+        });
       });
     } else {
       message.error("添加失败");
@@ -103,33 +109,35 @@ class Add extends Component {
     form.validateFieldsAndScroll(async (err, values) => {
       if (!err) {
         let { iqs } = this.state;
-        let {company} = values;
-        if(company){
-          iqs = iqs.map(item=>{
+        let { company } = values;
+        if (company) {
+          iqs = iqs.map(item => {
             item.company = company;
             return item;
-          })
+          });
+        }else{
+          iqs = iqs.map(item => {
+            delete item.company;
+            return item;
+          });
         }
         this.addIQ(iqs);
-      }else{
-
+      } else {
         // 设置后无法报错
         // form.setFieldsValue({iqs:''})
         this.iqs.focus();
       }
     });
-
   };
   // 单条添加
   add_single = () => {
-    let { form} = this.props;
+    let { form } = this.props;
     form.validateFieldsAndScroll(async (err, values) => {
       if (!err) {
         values.detail = values.detail.toJSON();
         console.log("single:", values);
         this.addIQ([{ ...values }]);
-      }else{
-        
+      } else {
       }
     });
   };
@@ -154,8 +162,15 @@ class Add extends Component {
     } catch (err) {
       console.log("request /category error", err);
     }
+
+    // 获取所有公司
+    let { data:companyList } = await Api.get("/company");
+
+    // 获取所有tags
+
     this.setState({
-      category
+      category,
+      companyList
     });
   }
   componentWillUnmount() {
@@ -168,7 +183,6 @@ class Add extends Component {
     // let {result} = this.state;
     // let {form:nextForm} = nextProps
     // let {result:nextResult} = nextState;
-
     // let nextIQs = nextForm.getFieldValue('iqs');
     // let iqs = form.getFieldValue('iqs');console.log('nextIQs:iqs',nextIQs,iqs)
     // if (nextIQs != iqs) {
@@ -178,8 +192,6 @@ class Add extends Component {
     //     result
     //   });
     // }
-    
-
     // if (nextResult.length != result.length) {
     //   let iqs = result.map(item=>item.question).join('\n')
     //   form.setFieldsValue({iqs})
@@ -189,15 +201,11 @@ class Add extends Component {
     // console.log("componentDidUpdate:", nextState);
   }
   render() {
-    let {
-      iqs,
-      category,
-      addType,
-      detail,
-      showCompany,
-    } = this.state;
+    let { iqs, category, addType, detail, showCompany,companyList } = this.state;
 
     let { getFieldDecorator, getFieldValue } = this.props.form;
+
+    const companyOptions = companyList.map(item=><AutoComplete.Option key={item}>{item}</AutoComplete.Option>)
 
     return (
       <div>
@@ -214,28 +222,33 @@ class Add extends Component {
           {showCompany ? (
             <Form.Item label="公司名称">
               {getFieldDecorator("company", {})(
-                <Input
-                  prefix={<span style={{ color: "rgba(0,0,0,.25)" }}>@</span>}
-                  suffix={
-                    <Tooltip title="在哪家公司被问到该面试题，请尽量填写，可以帮助到更多的人">
-                      <Icon
-                        type="info-circle"
-                        style={{ color: "rgba(0,0,0,.45)" }}
-                      />
-                    </Tooltip>
-                  }
-                  addonAfter={
-                    <Tooltip title="不填写公司">
-                      <Icon
-                        type="close"
-                        style={{color:'#f00'}}
-                        onClick={() => {
-                          this.setState({ showCompany: false });
-                        }}
-                      />
-                    </Tooltip>
-                  }
-                />
+                <AutoComplete
+                  dataSource={companyOptions}
+                  // onChange={this.changeCompany}
+                >
+                  <Input
+                    prefix={<span style={{ color: "rgba(0,0,0,.25)" }}>@</span>}
+                    suffix={
+                      <Tooltip title="在哪家公司被问到该面试题，请尽量填写，可以帮助到更多的人">
+                        <Icon
+                          type="info-circle"
+                          style={{ color: "rgba(0,0,0,.45)" }}
+                        />
+                      </Tooltip>
+                    }
+                    addonAfter={
+                      <Tooltip title="不填写公司">
+                        <Icon
+                          type="close"
+                          style={{ color: "#f00" }}
+                          onClick={() => {
+                            this.setState({ showCompany: false });
+                          }}
+                        />
+                      </Tooltip>
+                    }
+                  />
+                </AutoComplete>
               )}
             </Form.Item>
           ) : (
@@ -254,18 +267,16 @@ class Add extends Component {
 
           {addType === "multiple" ? (
             <>
-              <Form.Item label="面试题（每行一道）">
+              <Form.Item label="面试题（每行一道面试题）">
                 {getFieldDecorator("iqs", {
-                  initialValue:iqs.map(item=>item.question).join('\n'),
-                  rules:[
-                    {required:true,message:'请输入面试题'}
-                  ]
+                  initialValue: iqs.map(item => item.question).join("\n"),
+                  rules: [{ required: true, message: "请输入面试题" }]
                 })(
                   <Input.TextArea
                     placeholder="输入面试题，每行一道"
                     onChange={this.onChange}
                     autosize={{ minRows: 5 }}
-                    ref={el=>this.iqs=el}
+                    ref={el => (this.iqs = el)}
                     // ref={this.iqs}
                   />
                 )}
@@ -326,7 +337,7 @@ class Add extends Component {
         {/* 自动识别数据（分阶段） */}
         {addType === "multiple" ? (
           <List
-            style={{ margin: '15px 0' }}
+            style={{ margin: "15px 0" }}
             itemLayout="vertical"
             size="small"
             dataSource={iqs}
@@ -351,10 +362,9 @@ class Add extends Component {
                   </Dropdown>,
                   <Tooltip title="删除" key="btn">
                     <Icon
-                      
                       type="close-circle"
-                      style={{ marginLeft: 20,color:'#f00' }}
-                      onClick={this.removeIQ.bind(this,idx)}
+                      style={{ marginLeft: 20, color: "#f00" }}
+                      onClick={this.removeIQ.bind(this, idx)}
                     />
                   </Tooltip>
                 ]}
@@ -364,11 +374,7 @@ class Add extends Component {
             )}
           />
         ) : null}
-        <Button
-          size="large"
-          type="primary"
-          onClick={this["add_" + addType]}
-        >
+        <Button size="large" type="primary" onClick={this["add_" + addType]}>
           添加
         </Button>
       </div>
