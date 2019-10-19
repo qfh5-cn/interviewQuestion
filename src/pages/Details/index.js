@@ -12,14 +12,18 @@ import {
   Empty,
   message,
   Row,
-  Col
+  Col,
+  Typography
 } from "antd";
 import moment from "moment";
-import MyTags from '@@/MyTags';
+import MyTags from "@@/MyTags";
 
 import Api from "@/api";
 import { withUser } from "@/utils";
 import { UPDATE_USER_INFO } from "../../store/action/common";
+import ReEditor from "re-editor";
+import "re-editor/lib/styles/index.css";
+import "./Details.scss";
 
 // 自定义评论框
 const Editor = ({ onChange, onSubmit, submitting, value, disabled }) => (
@@ -165,7 +169,7 @@ class Details extends Component {
   // 添加/取消关注
   add2Focus = async () => {
     let { data } = this.state;
-    let { user, dispatch } = this.props;
+    let { user, dispatch,history } = this.props;
     let url = `/user/${user._id}/follow`;
     if (user.focus && user.focus.includes(data._id)) {
       url = `/user/${user._id}/unfollow`;
@@ -182,7 +186,7 @@ class Details extends Component {
 
   render() {
     let { data, action, submitting, value, answer } = this.state;
-    let { user } = this.props;
+    let { user, history } = this.props;
 
     const Like = ({ type = "like", title = "赞", item }) => (
       <Tooltip title={title}>
@@ -204,10 +208,31 @@ class Details extends Component {
       <div>
         <Row>
           <Col span={18}>
-            <h1>
-              {data.user && (data.user.nickname || data.user.username)}：
-              {data.question}
-            </h1>
+            <h1>{data.question}</h1>
+            <p class="belong">
+              {data.company ? (
+                <Tooltip title="查看该公司所有面试题">
+                  <Typography.Text
+                    type="secondary"
+                    onClick={() => {
+                      history.push("/iq?company=" + data.company);
+                    }}
+                  >
+                    @{data.company}
+                  </Typography.Text>
+                </Tooltip>
+              ) : null}
+              <Tooltip title="查看该用户所有面试题">
+                <Typography.Text
+                  type="secondary"
+                  onClick={() => {
+                    history.push("/iq?userid=" + user._id);
+                  }}
+                >
+                  @{data.user && (data.user.nickname || data.user.username)}
+                </Typography.Text>
+              </Tooltip>
+            </p>
           </Col>
           <Col span={6} style={{ textAlign: "right" }}>
             <Tooltip title={focused ? "取消关注" : "+关注"}>
@@ -222,21 +247,27 @@ class Details extends Component {
             </Tooltip>
           </Col>
         </Row>
-        <p>热度：{data.hot}</p>
-        <div style={{margin:'20px 0'}}>
-          难度：
-          <Rate value={data.difficulty} disabled />
-        </div>
-        {
-          data.tags ?
-          <div>
-            Tags：
-            <MyTags value={data.tags} disabled />
+        {data.detail ? (
+          <div className="iqmore">
+            <ReEditor value={data.detail} readOnly tools={[]} />
           </div>
-          :
-          null
-        }
-        
+        ) : null}
+        <ul className="list-attr">
+          <li>热度：{data.hot}</li>
+          <li>
+            难度：
+            <Rate value={data.difficulty} disabled />
+          </li>
+          {data.tags ? (
+            <li>
+              Tags：
+              <MyTags value={data.tags} disabled onClick={(tag)=>{
+                history.push(`/iq?tag=${tag}`)
+              }} />
+            </li>
+          ) : null}
+        </ul>
+
         {answer.result.length === 0 ? (
           <Empty
             description="面试题暂无答案，期待你的完善"
