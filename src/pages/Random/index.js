@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "antd";
 import Api from "@/api";
-import Datalist from "@@/Datalist";
+import TableList from "@@/TableList";
 
 class Random extends Component {
   state = {
@@ -28,7 +28,7 @@ class Random extends Component {
       <div>
         <h1>随机测试</h1>
         <p>随机获取一、二、三阶段技术或人事任意5道面试题进行测试</p>
-        <Datalist data={data.result} pagination={false} />
+        <TableList data={data.result} pagination={false} />
         <Button
           type="primary"
           size="large"

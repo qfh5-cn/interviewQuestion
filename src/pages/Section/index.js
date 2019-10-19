@@ -4,7 +4,7 @@ const { TabPane } = Tabs;
 const {Option} = Select;
 
 import Api from "@/api";
-import Datalist from "@@/Datalist";
+import TableList from "@@/TableList";
 
 class Section extends Component {
   state = {
@@ -62,7 +62,7 @@ class Section extends Component {
                 {
                   item.data 
                   ? 
-                  <Datalist data={item.data.result} pagination={{
+                  <TableList data={item.data.result} pagination={{
                     size:'small',
                     pageSize,
                     pageSizeOptions:['5','10','20'],
@@ -76,7 +76,7 @@ class Section extends Component {
                     }
                   }} />
                   :
-                  <Datalist />
+                  <TableList />
                 }
                 
               </TabPane>

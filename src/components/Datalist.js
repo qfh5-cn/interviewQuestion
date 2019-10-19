@@ -1,76 +1,40 @@
-import React from "react";
-import {withRouter} from 'react-router-dom';
-import { Button, Table,Rate,Icon } from "antd";
-
-import './Datalist.scss'
-
-let defaultData = [
-];
-
-function Datalist({ data = defaultData,history,pagination=false }) {
-  const columns = [
-    {
-      title: "#",
-      dataIndex:"rowNumber",
-      render(text, row, idx) {
-        return idx + 1;
-      }
-    },
-    {
-      title: "面试题",
-      dataIndex: "question",
-      width:400,
-    },
-    // {
-    //   title: "阶段",
-    //   dataIndex: "category",
-    //   render(text,row,idx){console.log('row:',row)
-    //     return <Button size="small" shape="round">
-    //     {isNaN(text) ? text : text+'阶段'}
-    //     </Button>;
-    //   }
-    // },
-    {
-      title: "难度",
-      dataIndex: "difficulty",
-      render(text){
-        return <Rate value={text} style={{margin:0,fontSize:16}} disabled character={<Icon type="star" />} />
-      },
-      sorter: (a, b) => b.difficulty - a.difficulty,
-    },
-    {
-      title: "热度",
-      dataIndex: "hot",
-      sorter: (a, b) => b.hot - a.hot,
-    },
-    {
-      title: "操作",
-      dataIndex: "actions",
-      render(text,row,idx) {
-        return (
-          <Button.Group size="small">
-            <Button type="primary" ghost onClick={()=>{
-              history.push(`/iq/${row._id}`)
-            }}>
-              查看
-            </Button>
-            {/* <Button ghost type="danger" icon="heart">
-            </Button> */}
-          </Button.Group>
-        );
-      }
-    }
-  ];
-  return (
-    <Table
+import React from 'react';
+import {Row,Col,Icon,List,Button} from 'antd';
+import moment from "moment";
+moment.locale('zh-cn')
+function DataList({title,data,gotoList,gotoDetail}){
+  
+    return <div style={{ marginTop: 15 }}>
+        {
+            title ? 
+            <Row>
+                <Col span={16}>
+                    <h3>{title}</h3>
+                </Col>
+                <Col span={8} style={{ textAlign: "right" }}>
+                    <Button type="link" onClick={gotoList}>更多<Icon type="right" /></Button>
+                </Col>
+            </Row>
+            :
+            null
+        }
+    
+    <List
       dataSource={data}
-      columns={columns}
-      pagination={pagination}
-      rowKey="_id"
-      size="middle"
-      className="iq-list"
+      renderItem={(item, idx) => (
+        <List.Item
+          key={item._id}
+          actions={[<Icon type="right" />]}
+          onClick={gotoDetail.bind(this,item._id)}
+        >
+          <List.Item.Meta
+            title={`${idx + 1}. ${item.question}`}
+            description={moment(item.addtime).fromNow()}
+            />
+            
+        </List.Item>
+      )}
     />
-  );
+  </div>
 }
-
-export default withRouter(Datalist);
+export default DataList;

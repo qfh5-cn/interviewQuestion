@@ -4,7 +4,6 @@ import Api from "@/api";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import cartActionCreator from "@/store/action/common";
-import Datalist from "@@/Datalist";
 import qs from "querystring";
 
 class Search extends Component {

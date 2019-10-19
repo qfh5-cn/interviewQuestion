@@ -1,27 +1,29 @@
 import React, { Component } from "react";
-import { Button, Tag, Icon, List } from "antd";
+import { Spin, Tag, Icon, List } from "antd";
 import Api from "@/api";
 import qs from "querystring";
 import {withUser} from '@/utils/hoc'
+import InfiniteScroll from 'react-infinite-scroller';
 
 @withUser
 class InfiniteList extends Component {
   state = {
     category: [],
     data: [],
+    page:1,
+    size:15,
     loading: false,
     hasMore: true
   };
   componentDidMount() {
-    console.log('componentDidMount:',this.props.user.username)
-    this.getData();
+    // this.getData();
   }
   shouldComponentUpdate(nextProps){
     let {location:{pathname},user:{_id}} = this.props;
     let {location:{pathname:nextPathname},user:{_id:next_id}} = nextProps
 
-    console.log('should.pathname',pathname,nextPathname)
-    console.log('should.id',_id,next_id)
+    // console.log('should.pathname',pathname,nextPathname)
+    // console.log('should.id',_id,next_id)
     // if(pathname != nextPathname){
       // this.getData(nextPathname);
     // }
@@ -33,7 +35,6 @@ class InfiniteList extends Component {
   }
   componentDidUpdate({location:{pathname:nextPathname}}, nextState){
     let {location:{pathname}} = this.props;
-    console.log('componentDidUpdate:',pathname,nextPathname);
 
     // 添加条件判断，避免死循环
     if(pathname != nextPathname){
@@ -41,10 +42,10 @@ class InfiniteList extends Component {
     }
   }
   getData = async ()=>{
-    let {pathname} = this.props.location;
+    let {data,page,size} = this.state;
+    let { user,location:{search,pathname}} = this.props;
     let paths = pathname.split(/\b(?=\/)/)
     pathname = paths[paths.length>1?1:0];
-    let { user,location:{search}} = this.props;
     let params = qs.parse(search.slice(1));
 
     // 如来自/mine/xxx，则自动添加userid
@@ -63,25 +64,35 @@ class InfiniteList extends Component {
     }
 
 
+    this.setState({
+      loading:true
+    })
 
-    let { data } = await Api.get(pathname, { ...params });
-
+    let { data:newData } = await Api.get(pathname, { ...params,page,size });
     //获取分类
     // let { data: category } = await Api.get("/category");
     this.setState({
       // category,
-      data
+      page:page+1,
+      data:data.concat(newData.result),
+      hasMore:(data.length+newData.result.length)<newData.total,
+      loading:false
     });
   }
   render() {
-    let { data, loading, hasMore, category } = this.state;
+    let { data, loading, hasMore, category,page } = this.state;
     let { history,location:{pathname} } = this.props;
     let paths = pathname.split(/\b(?=\/)/)
     pathname = paths[paths.length>1?1:0];
     return (
-      <div style={{ height: "100%", overflowY: "auto" }}>
+        <InfiniteScroll
+        pageStart={0}
+        loadMore={this.getData}
+        hasMore={!loading && hasMore}
+        loader={<Spin key={page} tip="loading" size="large" indicator={<Icon type="loading" style={{ fontSize: 30 }} spin />}/>}
+        >
         <List
-          dataSource={data.result}
+          dataSource={data}
           renderItem={(item, idx) => (
             <List.Item 
             key={item._id} 
@@ -91,31 +102,34 @@ class InfiniteList extends Component {
               history.push(`/iq/${id}`)
             }}
             >
-              {['/iq','/focus'].includes(pathname) ? (
+              {/* {['/iq','/focus'].includes(pathname) ? ( */}
                 <List.Item.Meta
-                  title={`${idx + 1}.${item.question}`}
+                  title={<><Icon type="link" style={{color:'#ccc',marginRight:5}} /> {item.question||item.content}</>}
                   description={
-                    item.tags && item.tags.map(tag => <Tag>{tag}</Tag>)
+                    <div style={{paddingLeft:22}}>
+                    {item.tags && item.tags.map(tag => <Tag>{tag}</Tag>)}
+                    <div>{item.iq&&"@" + item.iq.question}</div>
+                    </div>
                   }
                 />
-              ) : (
+              {/* ) : (
                 <List.Item.Meta
-                  title={`${idx + 1}.${item.content}`}
+                  title={<><Icon type="link" style={{color:'#ccc',marginRight:5}} /> {item.content}</>}
                   description={item.iq&&"@" + item.iq.question}
                 />
-              )}
+              )} */}
 
               {/* <Button size="small" type="dashed" disabled>{category.filter(cat=>cat.code==item.category)[0].name}</Button> */}
             </List.Item>
           )}
         >
-          {loading && hasMore && (
+          {/* {loading && hasMore && (
             <div className="demo-loading-container">
               <Spin />
             </div>
-          )}
+          )} */}
         </List>
-      </div>
+        </InfiniteScroll>
     );
   }
 }
