@@ -209,7 +209,7 @@ class Details extends Component {
         <Row>
           <Col span={18}>
             <h1>{data.question}</h1>
-            <p class="belong">
+            <p className="belong">
               {data.company ? (
                 <Tooltip title="查看该公司所有面试题">
                   <Typography.Text

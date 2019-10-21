@@ -2,8 +2,8 @@ import React from 'react';
 import {Row,Col,Icon,List,Button} from 'antd';
 import moment from "moment";
 moment.locale('zh-cn')
-function DataList({title,data,gotoList,gotoDetail}){
-  
+function DataList({title,data,gotoList,gotoDetail,date}){
+    
     return <div style={{ marginTop: 15 }}>
         {
             title ? 
@@ -12,7 +12,7 @@ function DataList({title,data,gotoList,gotoDetail}){
                     <h3>{title}</h3>
                 </Col>
                 <Col span={8} style={{ textAlign: "right" }}>
-                    <Button type="link" onClick={gotoList}>更多<Icon type="right" /></Button>
+                    {gotoList ? <Button type="link" onClick={gotoList}>更多<Icon type="right" /></Button>:null}
                 </Col>
             </Row>
             :
@@ -21,19 +21,31 @@ function DataList({title,data,gotoList,gotoDetail}){
     
     <List
       dataSource={data}
-      renderItem={(item, idx) => (
-        <List.Item
+      renderItem={(item, idx) => {
+        let discription = item.iq ? `@${item.iq.question}`:``;
+        let content ;
+        if(date){
+          if(typeof date === 'boolean'){
+            content = moment(item.addtime).fromNow()
+          }else{
+            content = moment(item.addtime).format(date);
+          }
+        }
+        return (
+          <List.Item
           key={item._id}
           actions={[<Icon type="right" />]}
-          onClick={gotoDetail.bind(this,item._id)}
+          onClick={gotoDetail.bind(this,item.iqid||item._id)}
         >
           <List.Item.Meta
-            title={`${idx + 1}. ${item.question}`}
-            description={moment(item.addtime).fromNow()}
+            title={`${idx + 1}. ${item.question||item.content}`}
+            description={discription}
             />
-            
+            <div>{content}</div>
         </List.Item>
-      )}
+        )
+      }
+    }
     />
   </div>
 }

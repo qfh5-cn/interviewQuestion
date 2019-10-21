@@ -241,7 +241,6 @@ class App extends Component {
               <Route path="/add" component={Add} />
               <Route path="/mine" component={Mine} />
               <Route path="/search" component={Search} />
-              {/* <Route path="/answer" component={List} exact /> */}
               <Route path="/iq" component={List} exact />
               <Route path="/iq/:id" component={Details} />
               <Route path="/reg" component={Reg} />

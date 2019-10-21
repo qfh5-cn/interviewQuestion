@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Button, Row, Col, Icon, List, Divider } from "antd";
 import Api from "@/api";
 import { withAuth } from "@/utils";
-import MyList from "@@/MyList";
+import MyList from "./MyList";
+import DataList from '@@/DataList'
 
 @withAuth
 class Mine extends Component {
@@ -111,7 +112,7 @@ class Mine extends Component {
   }
   render() {
     let { menu, myIQ, myAnswer } = this.state;
-    let { match } = this.props;
+    let { match,user } = this.props;
     return (
       <div>
         <Row gutter={16}>
@@ -162,8 +163,21 @@ class Mine extends Component {
             )}
           />
         </div> */}
-        <MyList title="我的面试题" type="iq" data={myIQ.result} />
-        <MyList title="我的回答" type="answer" data={myAnswer.result} />
+        {/* <MyList title="我的面试题" type="iq" data={myIQ.result} />
+        <MyList title="我的回答" type="answer" data={myAnswer.result} /> */}
+        <DataList 
+          title="我的面试题" 
+          data={myIQ.result} 
+          gotoList={this.goto.bind(this,'/mine/iq')} 
+          gotoDetail={this.gotoIQ}
+        />
+        <DataList 
+          title="我的回答" 
+          data={myAnswer.result} 
+          gotoList={this.goto.bind(this,'/mine/answer')} 
+          gotoDetail={this.gotoIQ}
+          date
+        />
       </div>
     );
   }
