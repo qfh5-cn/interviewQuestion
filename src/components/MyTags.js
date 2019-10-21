@@ -3,7 +3,7 @@ import { Tag, Input, Tooltip, Icon } from 'antd';
 
 class MyTags extends Component {
   state = {
-    tags:[],
+    tags:this.props.value||[],
     inputVisible: false,
     inputValue: '',
   };
@@ -41,7 +41,7 @@ class MyTags extends Component {
   saveInputRef = input => (this.input = input);
 
   render() {
-    let {disabled,value=[],onClick} = this.props;
+    let {disabled,onClick} = this.props;
     const { tags=value, inputVisible, inputValue } = this.state;
     return (
       <>

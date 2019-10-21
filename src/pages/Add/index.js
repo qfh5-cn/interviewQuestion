@@ -12,7 +12,8 @@ import {
   message,
   Form,
   Rate,
-  AutoComplete
+  AutoComplete,
+  Select
 } from "antd";
 import MyTags from "@@/MyTags";
 
@@ -136,7 +137,11 @@ class Add extends Component {
       if (!err) {
         values.detail = values.detail.toJSON();
         console.log("single:", values);
-        this.addIQ([{ ...values }]);
+        let {company,category} = values;
+        // company以传参的方式写入，删除数据中的company属性
+        delete values.company;
+        if(category === '-1') delete values.category
+        this.addIQ([{ ...values }],{company});
       } else {
       }
     });
@@ -310,6 +315,19 @@ class Add extends Component {
                       </Tooltip>
                     }
                   />
+                )}
+              </Form.Item>
+              <Form.Item label="分类">
+                {getFieldDecorator("category", {
+                  initialValue:'-1'
+                })(
+                  <Select style={{ width: 120 }}>
+                    <Select.Option key="default" value="-1">请选择分类</Select.Option>
+                    {
+                      category.map(item=><Select.Option key={item._id} value={item.code}>{item.name}</Select.Option>)
+                    }
+                  
+                </Select>
                 )}
               </Form.Item>
               <Form.Item label="难度">
