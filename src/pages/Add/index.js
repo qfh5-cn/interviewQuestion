@@ -30,7 +30,7 @@ class Add extends Component {
     category: [],
     addType: "multiple",
     iqs: [],
-    companyList:['广州千锋互联科技有限公司','测试有限公司']
+    companyList:[]
     // tags: []
     // detail:{},
   };
@@ -66,7 +66,7 @@ class Add extends Component {
   formatData(data) {
     // 格式化数据：string -> array
     if (!data) return [];
-    data = data.trim().replace(/^[\*\d\s]+[、\\，\,\.]?|[？\?。\.；\;]$/gm, "");
+    data = data.trim().replace(/^[\*\d\s]+[、\\，\,\.]?|[？\?。\.；\;，\,]$/gm, "");
     return data.split("\n").map(item => ({
       question: item
     }));
@@ -84,10 +84,10 @@ class Add extends Component {
     form.setFieldsValue({ iqs: iqs.map(item => item.question).join("\n") });
   };
   // data:Array
-  addIQ = async iqs => {
+  addIQ = async (iqs,params={}) => {
     let { user,form } = this.props;
-    console.log(iqs)
     let result = await Api.post("/iq", {
+      ...params,
       userid: user._id,
       iqs
     });
@@ -106,22 +106,22 @@ class Add extends Component {
   // 批量添加
   add_multiple = () => {
     let { form } = this.props;
-    form.validateFieldsAndScroll(async (err, values) => {
+    form.validateFieldsAndScroll(async (err, values) => {console.log('multiple:',values)
       if (!err) {
         let { iqs } = this.state;
         let { company } = values;
-        if (company) {
-          iqs = iqs.map(item => {
-            item.company = company;
-            return item;
-          });
-        }else{
-          iqs = iqs.map(item => {
-            delete item.company;
-            return item;
-          });
-        }
-        this.addIQ(iqs);
+        // if (company) {
+        //   iqs = iqs.map(item => {
+        //     item.company = company;
+        //     return item;
+        //   });
+        // }else{
+        //   iqs = iqs.map(item => {
+        //     delete item.company;
+        //     return item;
+        //   });
+        // }
+        this.addIQ(iqs,{company});
       } else {
         // 设置后无法报错
         // form.setFieldsValue({iqs:''})
@@ -205,7 +205,7 @@ class Add extends Component {
 
     let { getFieldDecorator, getFieldValue } = this.props.form;
 
-    const companyOptions = companyList.map(item=><AutoComplete.Option key={item}>{item}</AutoComplete.Option>)
+    const companyOptions = companyList.map(item=><AutoComplete.Option key={item._id}>{item.name}</AutoComplete.Option>)
 
     return (
       <div>
@@ -225,6 +225,10 @@ class Add extends Component {
                 <AutoComplete
                   dataSource={companyOptions}
                   // onChange={this.changeCompany}
+                  filterOption={(inputValue,option)=>{
+                    let reg = new RegExp(inputValue,'i');
+                    return reg.test(option.props.children);
+                  }}
                 >
                   <Input
                     prefix={<span style={{ color: "rgba(0,0,0,.25)" }}>@</span>}
@@ -315,7 +319,7 @@ class Add extends Component {
               </Form.Item>
               <Form.Item label="标签">
                 {getFieldDecorator("tags", {
-                  initialValue: 1
+                  initialValue: []
                 })(<MyTags onChange={this.changeTags} />)}
               </Form.Item>
               <Form.Item label="问题补充（选填）">

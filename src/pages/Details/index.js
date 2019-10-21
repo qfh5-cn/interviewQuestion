@@ -215,10 +215,10 @@ class Details extends Component {
                   <Typography.Text
                     type="secondary"
                     onClick={() => {
-                      history.push("/iq?company=" + data.company);
+                      history.push("/iq?companyid=" + data.company._id);
                     }}
                   >
-                    @{data.company}
+                    @{data.company.name}
                   </Typography.Text>
                 </Tooltip>
               ) : null}

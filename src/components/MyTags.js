@@ -3,6 +3,7 @@ import { Tag, Input, Tooltip, Icon } from 'antd';
 
 class MyTags extends Component {
   state = {
+    tags:[],
     inputVisible: false,
     inputValue: '',
   };
@@ -47,7 +48,7 @@ class MyTags extends Component {
         {tags.map((tag, index) => {
           const isLongTag = tag.length > 20;
           const tagElem = (
-            <Tag key={tag} onClose={() => this.handleClose(tag)} onClick={onClick.bind(this,tag)}>
+            <Tag key={tag} onClose={() => this.handleClose(tag)} onClick={onClick&&onClick.bind(this,tag)}>
               {isLongTag ? `${tag.slice(0, 20)}...` : tag}
             </Tag>
           );
