@@ -48,10 +48,8 @@ class InfiniteList extends Component {
         }
       >
         <DataList
-          title={title}
+          {...this.props}
           data={data}
-          gotoDetail={gotoDetail}
-          date={date}
         />
       </InfiniteScroll>
     );

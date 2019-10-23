@@ -1,20 +1,27 @@
 import React from 'react';
-import {Row,Col,Icon,List,Button} from 'antd';
+import {PageHeader,Row,Col,Icon,List,Button} from 'antd';
 import moment from "moment";
 moment.locale('zh-cn')
-function DataList({title,data,gotoList,gotoDetail,date}){
+function DataList({title,subTitle,data,gotoList,gotoDetail,goBack,date}){
     
-    return <div style={{ marginTop: 15 }}>
+    return <div>
         {
             title ? 
-            <Row>
-                <Col span={16}>
-                    <h3>{title}</h3>
-                </Col>
-                <Col span={8} style={{ textAlign: "right" }}>
-                    {gotoList ? <Button type="link" onClick={gotoList}>更多<Icon type="right" /></Button>:null}
-                </Col>
-            </Row>
+            // <Row>
+            //     <Col span={16}>
+            //         <h3>{title}</h3>
+            //     </Col>
+            //     <Col span={8} style={{ textAlign: "right" }}>
+            //         {gotoList ? <Button type="link" onClick={gotoList}>更多<Icon type="right" /></Button>:null}
+            //     </Col>
+            // </Row>
+            <PageHeader
+              style={{paddingLeft:0,paddingRight:0}}
+              onBack={goBack}
+              title={title}
+              subTitle={subTitle}
+              extra={gotoList ? <Button type="link" onClick={gotoList}>更多<Icon type="right" /></Button>:null}
+            />
             :
             null
         }
