@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Carousel, Row, Col } from "antd";
+import { Carousel, Row, Col,Icon,Divider  } from "antd";
 import TableList from "@@/TableList";
 import DataList from "@@/DataList";
 import Api from "@/api";
@@ -13,7 +13,30 @@ class Home extends Component {
     hotlist: [],
     recommend: [],
     difficulty:[],
-    newlist:[]
+    newlist:[],
+    menu: [
+      {
+        name: "newIQ",
+        icon: "alert",
+        text: "最新添加",
+        path:"/iq?sort=addtime"
+      },{
+        name: "companyIQ",
+        icon: "bank",
+        text: "企业真题",
+        path:"/company"
+      },{
+        name: "userIQ",
+        icon: "contacts",
+        text: "用户添加",
+        path:"/user"
+      },{
+        name: "hotTag",
+        icon: "tag",
+        text: "热门标签",
+        path:"/tag"
+      }
+    ],
   };
 
   goto = (path)=>{
@@ -55,7 +78,7 @@ class Home extends Component {
   }
 
   render() {
-    let { hotlist, recommend,difficulty,newlist } = this.state;
+    let { hotlist, recommend,difficulty,newlist,menu } = this.state;
     return (
       <div className="home">
         <Carousel afterChange={this.onChange} autoplay>
@@ -67,6 +90,27 @@ class Home extends Component {
             );
           })}
         </Carousel>
+        <Row gutter={16} style={{marginTop:30}}>
+          {menu.map(item => {
+            return (
+              <Col key={item.name} span={6}>
+                <div
+                  style={{ textAlign: "center", height: 80 }}
+                  onClick={this.goto.bind(this,item.path)}
+                >
+                  <Icon
+                    type={item.icon}
+                    theme="twoTone"
+                    style={{ fontSize: "36px", margin: 5, color: "#1890ff" }}
+                    twoToneColor="#1890ff"
+                  />
+                  <h4>{item.text}</h4>
+                </div>
+              </Col>
+            );
+          })}
+        </Row>
+        <Divider />
         <Row gutter={50}>
           <Col lg={16}>
             <h3>热门面试题</h3>
