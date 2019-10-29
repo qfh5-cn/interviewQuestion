@@ -21,7 +21,9 @@ class List extends Component {
     // 根据传入参数定义标题
     if (params.sort === "addtime") {
       title = "最新添加";
-    } else if (params.companyid) {
+    } else if (params.sort === "difficulty") {
+      title = "重点难点";
+    }else if (params.companyid) {
       // 根据id获取公司名称
       let { data } = await Api.get(`/company/${params.companyid}`);
       title = <>在 <Tag>{data[0].name}</Tag> 被问过</>;
