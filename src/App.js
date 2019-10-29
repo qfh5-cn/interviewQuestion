@@ -26,6 +26,7 @@ import Login from "~/Login";
 import List from "~/List";
 import Search from "~/Search";
 import Company from "~/Company";
+import Tags from "~/Tags";
 
 import MyBreadcrumb from "@@/Breadcrumb";
 import { withUser } from "./utils";
@@ -247,6 +248,7 @@ class App extends Component {
               <Route path="/reg" component={Reg} />
               <Route path="/login" component={Login} />
               <Route path="/company" component={Company} />
+              <Route path="/tags" component={Tags} />
               <Route
                 path="/forgotpwd"
                 render={() => <div>忘记密码找laoxie</div>}

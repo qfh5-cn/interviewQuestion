@@ -27,14 +27,14 @@ class Home extends Component {
         path:"/company"
       },{
         name: "userIQ",
-        icon: "contacts",
-        text: "用户添加",
-        path:"/user"
+        icon: "fire",
+        text: "重点难点",
+        path:"/iq?sort=difficulty"
       },{
         name: "hotTag",
-        icon: "tag",
+        icon: "tags",
         text: "热门标签",
-        path:"/tag"
+        path:"/tags"
       }
     ],
   };
@@ -114,9 +114,9 @@ class Home extends Component {
         <Row gutter={50}>
           <Col lg={16}>
             <h3>热门面试题</h3>
-            <TableList data={hotlist} />
+            <TableList data={hotlist} pagination={false} />
             <h3>重点难点面试题</h3>
-            <TableList data={difficulty} />
+            <TableList data={difficulty} pagination={false} />
           </Col>
           <Col lg={8}>
             {/* <h3>最新面试题</h3> */}

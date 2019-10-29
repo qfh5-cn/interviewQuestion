@@ -19,7 +19,9 @@ class Company extends Component {
       page,
       size: pageSize
     };
-    if(currentCompany !== 'all'){
+    if(currentCompany === 'all'){
+        params.companyid = true;
+    }else{
         params.companyid = currentCompany
     }
     let { data: iqs } = await Api.get("/iq", params);
@@ -71,10 +73,7 @@ class Company extends Component {
         <TableList
           data={iqs.result}
           pagination={{
-            size: "small",
-            pageSize,
-            pageSizeOptions: ["5", "10", "20"],
-            showSizeChanger: true,
+              pageSize,
             total: iqs.total,
             onChange: (page, pageSize) => {
               this.getData(page, pageSize);

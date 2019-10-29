@@ -63,10 +63,7 @@ class Section extends Component {
                   item.data 
                   ? 
                   <TableList data={item.data.result} pagination={{
-                    size:'small',
                     pageSize,
-                    pageSizeOptions:['5','10','20'],
-                    showSizeChanger:true,
                     total:item.data.total,
                     onChange:(page,pageSize)=>{
                       this.getTabData(item.code,page,pageSize);

@@ -6,7 +6,19 @@ import './TableList.scss'
 
 let defaultData = [
 ];
-function TableList({ data = defaultData,history,pagination=false,onClick }) {
+let defaultPagination = {
+  size: "small",
+  // pageSize:5,
+  pageSizeOptions: ["5", "10", "20"],
+  showSizeChanger:true,
+  showTotal:total=>`共${total}条`,
+}
+function TableList({ data = defaultData,history,pagination,onClick }) {
+  // 合并pagination选项
+  pagination = pagination===false ? false :{
+    ...defaultPagination,
+    ...pagination
+  }
   if(!onClick){
     onClick = (row,idx)=>{
       history.push(`/iq/${row._id}`)
