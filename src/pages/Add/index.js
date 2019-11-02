@@ -67,7 +67,7 @@ class Add extends Component {
   formatData(data) {
     // 格式化数据：string -> array
     if (!data) return [];
-    data = data.trim().replace(/^[\*\d\s]+[、\\，\,\.]?|[？\?。\.；\;，\,]$/gm, "");
+    data = data.trim().replace(/^[\*\d\s]+[、\\，\,。\.\-\s]*|[？\?。\.；\;，\,]$/gm, "");
     return data.split("\n").map(item => ({
       question: item
     }));
@@ -87,6 +87,7 @@ class Add extends Component {
   // data:Array
   addIQ = async (iqs,params={}) => {
     let { user,form } = this.props;
+    let {companyList} = this.state;
     let result = await Api.post("/iq", {
       ...params,
       userid: user._id,
@@ -95,11 +96,21 @@ class Add extends Component {
     if (result.status === 200) {
       message.success("添加面试题成功", () => {
         // this.forceUpdate();
-        form.resetFields();
-        this.setState({
-          iqs:[]
-        });
       });
+      form.resetFields();
+      this.setState({
+        iqs:[]
+      });
+
+      // 如果是新添加的公司，则从新获取公司名，以便下次使用
+      if(params.company && !companyList.some(item=>item._id==params.company)){
+        // 获取所有公司
+        let { data } = await Api.get("/company");
+        companyList = data;
+        this.setState({
+          companyList
+        });
+      }
     } else {
       message.error("添加失败");
     }
@@ -276,7 +287,7 @@ class Add extends Component {
 
           {addType === "multiple" ? (
             <>
-              <Form.Item label="面试题（每行一道面试题）">
+              <Form.Item label={`面试题（每行一道面试题：${iqs.length}）`}>
                 {getFieldDecorator("iqs", {
                   initialValue: iqs.map(item => item.question).join("\n"),
                   rules: [{ required: true, message: "请输入面试题" }]
@@ -317,7 +328,7 @@ class Add extends Component {
                   />
                 )}
               </Form.Item>
-              <Form.Item label="分类">
+              {/* <Form.Item label="分类">
                 {getFieldDecorator("category", {
                   initialValue:'-1'
                 })(
@@ -329,7 +340,7 @@ class Add extends Component {
                   
                 </Select>
                 )}
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item label="难度">
                 {getFieldDecorator("difficulty", {
                   initialValue: 1
@@ -367,21 +378,21 @@ class Add extends Component {
               <List.Item
                 key={item.question}
                 extra={[
-                  <Dropdown
-                    overlay={
-                      <Menu onClick={this.changeCategory.bind(this, idx)}>
-                        {category.map(item => (
-                          <Menu.Item key={item.code}>{item.name}</Menu.Item>
-                        ))}
-                      </Menu>
-                    }
-                    key="menu"
-                  >
-                    <Button size="small" type="link">
-                      {this.getCategoryName(item.category)}
-                      <Icon type="down" />
-                    </Button>
-                  </Dropdown>,
+                  // <Dropdown
+                  //   overlay={
+                  //     <Menu onClick={this.changeCategory.bind(this, idx)}>
+                  //       {category.map(item => (
+                  //         <Menu.Item key={item.code}>{item.name}</Menu.Item>
+                  //       ))}
+                  //     </Menu>
+                  //   }
+                  //   key="menu"
+                  // >
+                  //   <Button size="small" type="link">
+                  //     {this.getCategoryName(item.category)}
+                  //     <Icon type="down" />
+                  //   </Button>
+                  // </Dropdown>,
                   <Tooltip title="删除" key="btn">
                     <Icon
                       type="close-circle"
