@@ -259,7 +259,7 @@ class App extends Component {
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          <Footer>&copy; 千锋.广州H5教学部</Footer>
+          <Footer>&copy; 千锋 &bull; 广州H5</Footer>
         </Footer>
       </Layout>
     );

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Carousel, Row, Col,Icon,Divider  } from "antd";
+import { Carousel, Row, Col,Icon,Divider,Badge  } from "antd";
 import TableList from "@@/TableList";
 import DataList from "@@/DataList";
 import Api from "@/api";
@@ -14,6 +14,7 @@ class Home extends Component {
     recommend: [],
     difficulty:[],
     newlist:[],
+    todaylist:{},
     menu: [
       {
         name: "newIQ",
@@ -61,7 +62,12 @@ class Home extends Component {
 
     let { data:newlist } = await Api.get("/iq", {
       size:6,
+      // today:1,
       sort: "addtime"
+    });
+
+    let { data:todaylist } = await Api.get("/iq", {
+      today:1,
     });
 
     difficulty = difficulty.result;
@@ -69,6 +75,7 @@ class Home extends Component {
     newlist = newlist.result;
 
     this.setState({
+      todaylist,
       hotlist,
       difficulty,
       newlist,
@@ -78,7 +85,7 @@ class Home extends Component {
   }
 
   render() {
-    let { hotlist, recommend,difficulty,newlist,menu } = this.state;
+    let { hotlist, recommend,difficulty,newlist,todaylist,menu } = this.state;
     return (
       <div className="home">
         <Carousel afterChange={this.onChange} autoplay>
@@ -98,13 +105,29 @@ class Home extends Component {
                   style={{ textAlign: "center", height: 80 }}
                   onClick={this.goto.bind(this,item.path)}
                 >
-                  <Icon
-                    type={item.icon}
-                    theme="twoTone"
-                    style={{ fontSize: "36px", margin: 5, color: "#1890ff" }}
-                    twoToneColor="#1890ff"
-                  />
-                  <h4>{item.text}</h4>
+                  {
+                    item.name === 'newIQ' ? 
+                    <Badge count={todaylist.total}>
+                      <Icon
+                        type={item.icon}
+                        theme="twoTone"
+                        style={{ fontSize: "36px", margin: 5, color: "#1890ff" }}
+                        twoToneColor="#1890ff"
+                      />
+                      <h4>{item.text}</h4>
+                    </Badge>
+                    :
+                    <>
+                      <Icon
+                        type={item.icon}
+                        theme="twoTone"
+                        style={{ fontSize: "36px", margin: 5, color: "#1890ff" }}
+                        twoToneColor="#1890ff"
+                      />
+                      <h4>{item.text}</h4>
+                    </>
+                  }
+                  
                 </div>
               </Col>
             );
@@ -124,7 +147,8 @@ class Home extends Component {
               title="最新面试题" 
               data={newlist} 
               gotoList={this.gotoList.bind(this,'sort=addtime')} 
-              gotoDetail={this.gotoDetail} 
+              gotoDetail={this.gotoDetail}
+              date
             />
           </Col>
         </Row>

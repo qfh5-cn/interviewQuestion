@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { PageHeader, Tag, Icon } from "antd";
+import { Tag } from "antd";
 import qs from "querystring";
 import InfiniteList from "@@/InfiniteList";
 import Api from "@/api";
@@ -59,6 +59,10 @@ class List extends Component {
       pathname = "/search";
       params.keyword = params.tag;
     }
+
+    // 时间格式展示
+    let dateFormat = params.sort === 'addtime'?true:"YYYY/MM/DD"
+
     return (
       <div>
         {/* <PageHeader
@@ -77,7 +81,7 @@ class List extends Component {
             history.push(`/iq/${id}`);
           }}
           goBack={()=>history.goBack()}
-          date="YYYY/MM/DD"
+          date={dateFormat}
         />
       </div>
     );

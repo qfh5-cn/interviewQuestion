@@ -1,7 +1,12 @@
 import axios,{CancelToken} from 'axios';
+import store from '../store';
 // const CancelToken = axios.CancelToken;
 // const source = CancelToken.source();console.log('source',source)
 let pending = {};
+let Authorization = store.getState().common.getIn(['user','Authorization']);
+store.subscribe(()=>{
+    Authorization = store.getState().common.getIn(['user','Authorization']);
+})
 
 const apiserver = axios.create({
     // cancelToken: source.token,
@@ -21,19 +26,32 @@ export async function get(url,params,config={}){
 }
 
 export async function post(url,params){
-    let {data} = await apiserver.post(url,params);
+    
+    let {data} = await apiserver.post(url,params,{
+        headers:{
+            Authorization
+        }
+    });
 
     return data;
 }
 
 export async function patch(url,params){
-    let {data} = await apiserver.patch(url,params);
+    let {data} = await apiserver.patch(url,params,{
+        headers:{
+            Authorization
+        }
+    });
 
     return data;
 }
 
 export async function remove(url,params){
-    let {data} = await apiserver.delete(url,params);
+    let {data} = await apiserver.delete(url,params,{
+        headers:{
+            Authorization
+        }
+    });
 
     return data;
 }

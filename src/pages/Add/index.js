@@ -1,11 +1,10 @@
-import React, { Component, createRef } from "react";
-import { connect } from "react-redux";
+import React, { Component } from "react";
 import {
   Button,
   Input,
   List,
-  Menu,
-  Dropdown,
+  //Menu,
+  //Dropdown,
   Icon,
   Radio,
   Tooltip,
@@ -13,14 +12,13 @@ import {
   Form,
   Rate,
   AutoComplete,
-  Select
+  //Select
 } from "antd";
 import MyTags from "@@/MyTags";
 
 import Api from "@/api";
 import { withAuth } from "@/utils";
-import MyEditor from "@@/MyEditor";
-import { stateToHTML } from "draft-js-export-html";
+// import { stateToHTML } from "draft-js-export-html";
 import ReEditor from "re-editor";
 import "re-editor/lib/styles/index.css";
 
