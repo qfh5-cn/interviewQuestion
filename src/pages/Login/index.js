@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { Button, Form, Input, Icon,Checkbox } from "antd";
 import Api from "@/api";
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import cartActionCreator,{login} from '@/store/action/common'
+import {login} from '@/store/action/common'
 import qs from 'querystring';
 import CryptoJS from 'crypto-js';
 import { formItemLayout, tailFormItemLayout } from "@/global";
@@ -118,9 +117,5 @@ class Random extends Component {
     );
   }
 }
-// Random = Form.create({ name: "login" })(Random);
-// const mapStateToProps = (state)=>({})
-// const mapDispatchToProps = (dispatch)=>bindActionCreators(cartActionCreator,dispatch)
-// Random = connect(mapStateToProps,mapDispatchToProps)(Random);
 
 export default Random;

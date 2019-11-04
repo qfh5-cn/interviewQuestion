@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { PageHeader } from "antd";
-import qs from "querystring";
-import InfiniteList from "@@/InfiniteList";
 import Api from "@/api";
 import ReactWordcloud from "react-wordcloud";
 

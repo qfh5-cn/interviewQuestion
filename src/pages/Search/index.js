@@ -1,10 +1,6 @@
 import React, { Component } from "react";
-import { Button, Tag, Icon, List, Input } from "antd";
+import { Tag, List, Input } from "antd";
 import Api from "@/api";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import cartActionCreator from "@/store/action/common";
-import qs from "querystring";
 
 class Search extends Component {
   state = {
