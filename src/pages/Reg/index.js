@@ -124,7 +124,16 @@ class Reg extends Component {
                 {
                   required: true,
                   message: "请输入用户名"
-                }
+                },
+                // {
+                //   pattern:/^[\d\w\-]{3,20}$/,message:'用户名必须由 数字、字母、_、-，且至少3~20位字符'
+                // },
+                {
+                  min:3,max:16,message:'用户名必须为3~16个字符'
+                },
+                // {
+                //   max:16,message:'用户名不能超过16个字符'
+                // }
               ]
             })(<Input />)}
           </Form.Item>
@@ -135,6 +144,7 @@ class Reg extends Component {
                   required: true,
                   message: "请输入密码"
                 },
+                {min:6,message:'为了账号安全，密码至少为6位'},
                 {
                   validator: this.validateToNextPassword
                 }
