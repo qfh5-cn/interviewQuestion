@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,Suspense,lazy} from "react";
 import { connect } from "react-redux";
 import action, { changeBreadcrumb } from "./store/action/common";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
@@ -11,22 +11,36 @@ import {
   Row,
   Col,
   Avatar,
-  Tooltip
+  Tooltip,
+  Spin
 } from "antd";
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Footer, Content } = Layout;
 
-import Home from "~/Home";
-import Random from "~/Random";
-import Section from "~/Section";
-import Add from "~/Add";
-import Mine from "~/Mine";
-import Details from "~/Details";
-import Reg from "~/Reg";
-import Login from "~/Login";
-import List from "~/List";
-import Search from "~/Search";
-import Company from "~/Company";
-import Tags from "~/Tags";
+// import Home from "~/Home";
+// import Random from "~/Random";
+// import Section from "~/Section";
+// import Add from "~/Add";
+// import Mine from "~/Mine";
+// import Details from "~/Details";
+// import Reg from "~/Reg";
+// import Login from "~/Login";
+// import List from "~/List";
+// import Search from "~/Search";
+// import Company from "~/Company";
+// import Tags from "~/Tags";
+
+const Home = lazy(() =>import("~/Home"));
+const Random = lazy(() =>import("~/Random"));
+const Section = lazy(() =>import("~/Section"));
+const Add = lazy(() =>import("~/Add"));
+const Mine = lazy(() =>import("~/Mine"));
+const Details = lazy(() =>import("~/Details"));
+const Reg = lazy(() =>import("~/Reg"));
+const Login = lazy(() =>import("~/Login"));
+const List = lazy(() =>import("~/List"));
+const Search = lazy(() =>import("~/Login"));
+const Company = lazy(() =>import("~/Company"));
+const Tags = lazy(() =>import("~/Tags"));
 
 import MyBreadcrumb from "@@/Breadcrumb";
 import { withUser } from "./utils";
@@ -37,7 +51,6 @@ import "./App.scss";
 @withUser
 @connect(
   ({common}) => {
-    console.log('bbb:',common.get('breadcrumb'))
     return {breadcrumb:common.get('breadcrumb').toJS()};
   },
   dispatch => {
@@ -85,10 +98,6 @@ class App extends Component {
   };
 
   changeMenu = ({ key }) => {
-    
-
-    
-
     this.goto(key);
   };
 
@@ -236,6 +245,7 @@ class App extends Component {
             breadcrumb.length?<MyBreadcrumb data={breadcrumb} />:null
           }
           <div style={{ background: "#fff", padding: 24, minHeight: 280 }}>
+          <Suspense fallback={<Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />}>
             <Switch>
               <Route path="/home" component={Home} />
               <Route path="/random" component={Random} />
@@ -256,6 +266,7 @@ class App extends Component {
               <Redirect from="/" to="/home" exact />
               <Route render={() => <div>404</div>} />
             </Switch>
+            </Suspense>
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>

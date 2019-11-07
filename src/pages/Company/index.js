@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Radio, Row, Col, Icon, Divider } from "antd";
+import { Radio, Row, Col, Input,Button,Icon, Divider } from "antd";
 import TableList from "@@/TableList";
-import DataList from "@@/DataList";
 import Api from "@/api";
 import { connect } from "react-redux";
 
@@ -10,6 +9,8 @@ class Company extends Component {
   state = {
     companies: [],
     currentCompany: "all",
+    companyKeyword:'',
+    showQty:20,
     pageSize: 5,
     iqs: []
   };
@@ -41,6 +42,30 @@ class Company extends Component {
     });
     
   };
+  changeCompanyKeyword = e=>{
+    this.setState({
+      companyKeyword:e.target.value
+    })
+  }
+
+  showMore = (qty)=>{
+    let {showQty} = this.state;
+    if(typeof qty === 'number'){
+      showQty = qty;
+    }else{
+      showQty += 20;
+    }
+    this.setState({
+      showQty
+    })
+  }
+
+  filteCompany = (companies)=>{
+    let {showQty,companyKeyword} = this.state;
+    return companies
+    .filter(item=>new RegExp(companyKeyword,'i').test(item.name))
+    .filter((item,idx)=>idx<showQty)
+  }
 
   async componentDidMount() {
     // 获取所有公司
@@ -55,21 +80,39 @@ class Company extends Component {
   }
 
   render() {
-    let { companies, iqs, currentCompany, pageSize } = this.state;
+    let { companies, iqs, currentCompany, pageSize,companyKeyword,showQty } = this.state;
     return (
       <div>
-        <Radio.Group onChange={this.changeCompany} value={currentCompany}>
-          <Row>
-            <Col span={24}>
-              <Radio value="all">All</Radio>
+        <Radio.Group onChange={this.changeCompany} value={currentCompany} style={{display:'block'}}>
+          <Row style={{paddingBottom:15}}>
+            <Col span={24} style={{paddingBottom:15}}>
+              <Input.Search allowClear value={companyKeyword} onChange={this.changeCompanyKeyword} addonBefore={<Radio value="all">All</Radio>}/>
             </Col>
-            {companies.map(item => (
+            {this.filteCompany(companies).map(item => (
               <Col key={item._id} sm={12} md={8}>
                 <Radio value={item._id}>{item.name}</Radio>
               </Col>
             ))}
           </Row>
         </Radio.Group>
+        <div style={{textAlign:'center',paddingBottom:15}}>
+        {
+          showQty<companies.length
+          ?
+          
+          <Button.Group>
+            <Button size="small" onClick={this.showMore}>
+              更多
+              <Icon type="ellipsis" />
+            </Button>
+            <Button size="small" icon="menu" onClick={this.showMore.bind(this,companies.length)}>全部</Button>
+
+          </Button.Group>
+          
+          :
+          null
+        }
+        </div>
         <TableList
           data={iqs.result}
           pagination={{

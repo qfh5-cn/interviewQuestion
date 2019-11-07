@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Button, Tabs,List,Select } from "antd";
+import { Tabs} from "antd";
 const { TabPane } = Tabs;
-const {Option} = Select;
 
 import Api from "@/api";
 import TableList from "@@/TableList";

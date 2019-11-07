@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Button, Row, Col, Icon, List, Divider } from "antd";
+import { Row, Col, Icon, Divider } from "antd";
 import Api from "@/api";
 import { withAuth } from "@/utils";
-import MyList from "./MyList";
 import DataList from '@@/DataList'
 
 @withAuth

@@ -6,6 +6,7 @@ tools/
 
 ##过滤文件
 package-lock.json
+stats.json
 *.zip
 *.tgz
 *.mp3
