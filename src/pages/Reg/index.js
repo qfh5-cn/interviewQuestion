@@ -3,6 +3,7 @@ import { Button, Form, Input, Checkbox,Modal } from "antd";
 import Api from "@/api";
 import clauseContent from './clauseContent';
 import CryptoJS from 'crypto-js';
+import { formItemLayout, tailFormItemLayout } from "@/global.config";
 
 @Form.create({ name: "register" })
 class Reg extends Component {
@@ -81,33 +82,10 @@ class Reg extends Component {
 
   
   render() {
-    let { data, loading,clauseContent,clauseVisible } = this.state;
+    let { clauseContent,clauseVisible } = this.state;
     let { getFieldDecorator,getFieldValue } = this.props.form;
 
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
-      }
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0
-        },
-        sm: {
-          span: 18,
-          offset: 6
-        }
-      }
-    };
-
-    console.log("render:", this.props);
+    
 
     return (
       <div>

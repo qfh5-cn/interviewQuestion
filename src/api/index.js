@@ -1,5 +1,6 @@
 import axios,{CancelToken} from 'axios';
 import store from '../store';
+import {apiurl} from '../global.config';
 // const CancelToken = axios.CancelToken;
 // const source = CancelToken.source();console.log('source',source)
 let pending = {};
@@ -10,7 +11,8 @@ store.subscribe(()=>{
 
 const apiserver = axios.create({
     // cancelToken: source.token,
-    baseURL:'http://localhost:3000',
+    baseURL:apiurl,
+    // baseURL:'http://localhost:3000',
     // baseURL:'http://52.198.113.252:3000',
 })
 

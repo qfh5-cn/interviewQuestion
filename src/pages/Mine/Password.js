@@ -4,6 +4,7 @@ import {withUser} from '@/utils';
 import Api from '@/api';
 import {logout} from '@/store/action/common'
 import CryptoJS from 'crypto-js'
+import { formItemLayout, tailFormItemLayout } from "@/global.config";
 
 @withUser
 @Form.create({ name: "changePassword" })
@@ -31,28 +32,7 @@ class Password extends Component{
     let {user,form} = this.props;
     let { getFieldDecorator,getFieldValue } = form;
 
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
-      }
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0
-        },
-        sm: {
-          span: 18,
-          offset: 6
-        }
-      }
-    };
+    
     return (
       <div>
           <h1>修改密码</h1>

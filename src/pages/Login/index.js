@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {login} from '@/store/action/common'
 import qs from 'querystring';
 import CryptoJS from 'crypto-js';
-import { formItemLayout, tailFormItemLayout } from "@/global";
+import { formItemLayout, tailFormItemLayout } from "@/global.config";
 
 // const mapStateToProps = (state)=>({})
 // const mapDispatchToProps = (dispatch)=>bindActionCreators(cartActionCreator,dispatch)

@@ -20,3 +20,11 @@ export const tailFormItemLayout = {
       }
     }
 };
+
+export const apiurl= 
+// process.env.BUILD_ENV==='production'?
+// 'http://52.198.113.252:3000'
+// :
+"http://localhost:3000"
+
+console.log('process.env',process.env)
