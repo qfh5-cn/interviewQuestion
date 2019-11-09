@@ -10,7 +10,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 // 导出webpack配置
 module.exports = {
-  mode: "development",
+  mode: "production",
   // 入口
   entry: "./src/main.js",
 
@@ -116,7 +116,7 @@ module.exports = {
 
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /zh-cn/),
 
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
 
     // 优化打包文件体积
     // 1.压缩js代码

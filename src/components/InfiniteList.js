@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Spin,Icon} from "antd";
+import { Spin, Icon } from "antd";
 import moment from "moment";
 moment.locale("zh-cn");
 import Api from "@/api";
@@ -13,30 +13,52 @@ class InfiniteList extends Component {
     loading: false,
     hasMore: true
   };
-  getData = async () => {
-    let { data, page, size } = this.state;
-    let { user,api } = this.props;
-
+  loadMore = async () => {console.log('loadmore')
+    let { data, page } = this.state;
     this.setState({
       loading: true
     });
 
-    let { data: newData } = await Api.get(api.url, { ...api.params, page, size });
+    let newData = await this.getData();
 
     this.setState({
       page: page + 1,
-      data: data.concat(newData.result),
-      hasMore: (data.length + newData.result.length) < newData.total,
+      hasMore: data.length + newData.result.length < newData.total,
       loading: false
     });
   };
+  getData = async () => {console.log('getData')
+    let { data, page, size } = this.state;
+    let { api } = this.props;
+
+    let { data: newData } = await Api.get(api.url, {
+      ...api.params,
+      page,
+      size
+    });
+
+    this.setState({
+      data: data.concat(newData.result),
+      hasMore: page * size < newData.total
+    });
+    return newData;
+  };
+  componentDidUpdate(nextProps) {
+    let { api } = this.props; //console.log('componentDidUpdate:',api.url,nextProps.api.url)
+    if (nextProps.api.url != api.url) {
+      this.setState({ data: [], page: 1 }, () => {
+        this.getData();
+        // 解决与InfiniteScroll同时发起page=1请求的问题
+        this.setState({page:2})
+      });
+    }
+  }
   render() {
-    let { title, gotoList, gotoDetail,date } = this.props;
-    let {data,page,hasMore,loading} = this.state;
+    let { data, page, hasMore,loading } = this.state;
     return (
       <InfiniteScroll
-        pageStart={0}
-        loadMore={this.getData}
+        pageStart={page}
+        loadMore={this.loadMore}
         hasMore={!loading && hasMore}
         loader={
           <Spin
@@ -47,10 +69,7 @@ class InfiniteList extends Component {
           />
         }
       >
-        <DataList
-          {...this.props}
-          data={data}
-        />
+        <DataList {...this.props} data={data} />
       </InfiniteScroll>
     );
   }

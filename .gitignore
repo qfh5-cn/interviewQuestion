@@ -3,6 +3,7 @@ node_modules/
 .svn/
 .git/
 tools/
+dist/
 
 ##过滤文件
 package-lock.json

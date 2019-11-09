@@ -4,7 +4,8 @@ import { withUser } from "@/utils/hoc";
 import qs from 'querystring';
 import InfiniteList from "@@/InfiniteList";
 
-function MyList({ data, user, history, location: { search, pathname } }) {
+
+function MyList({ data, user, history, location: { search, pathname } }) {console.log(123)
   let paths = pathname.split(/\b(?=\/)/);
   let url = paths[paths.length > 1 ? 1 : 0];
   let params = qs.parse(search.slice(1));
