@@ -8,16 +8,20 @@ const CleanWepackPlugin = require("clean-webpack-plugin");
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+// console.log('webpack:',process.argv)
+const env = process.argv[2].slice(2);console.log(env)
+
 // 导出webpack配置
 module.exports = {
-  mode: "production",
+  mode: env,
   // 入口
   entry: "./src/main.js",
 
   // 出口
   output: {
     path: path.resolve(__dirname, "./dist"),
-    filename: "js/[name]-[hash:5].js"
+    filename: "js/[name]-[hash:5].js",
+    publicPath:'/'
   },
 
   // 服务器
@@ -127,12 +131,13 @@ module.exports = {
     //     filename: 'js/[name].js',
     //     minChunks: Infinity
     // }),
+
     // 3.定义全局变量
-    // new webpack.DefinePlugin({
-    //   // <-- 减少 React 大小的关键
-    //   "process.env": {
-    //     NODE_ENV: JSON.stringify("production")
-    //   }
-    // })
+    new webpack.DefinePlugin({
+      // 注入到客户端全局变量，必须使用JSON.stringify()
+      "process.env": {
+        NODE_ENV: JSON.stringify(env)
+      }
+    })
   ]
 };

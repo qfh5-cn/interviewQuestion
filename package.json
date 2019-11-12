@@ -7,9 +7,9 @@
     "doc": "doc"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --progress",
-    "build": "webpack",
+    "test": "webpack --test",
+    "dev": "webpack-dev-server --development --progress",
+    "build": "webpack --production",
     "start": "npm run dev"
   },
   "author": "laoxie",

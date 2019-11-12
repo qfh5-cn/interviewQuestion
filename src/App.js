@@ -38,13 +38,13 @@ const Details = lazy(() =>import("~/Details"));
 const Reg = lazy(() =>import("~/Reg"));
 const Login = lazy(() =>import("~/Login"));
 const List = lazy(() =>import("~/List"));
-const Search = lazy(() =>import("~/Login"));
+const Search = lazy(() =>import("~/Search"));
 const Company = lazy(() =>import("~/Company"));
 const Tags = lazy(() =>import("~/Tags"));
 
 import MyBreadcrumb from "@@/Breadcrumb";
 import { withUser } from "./utils";
-import {apiurl} from './global.config'
+import {baseurl} from './global.config'
 
 import "./App.scss";
 
@@ -226,7 +226,7 @@ class App extends Component {
             <Col span={3} xs={7} sm={4} style={{ textAlign: "right" }}>
               {user.username ? (
                 <Dropdown overlay={usermenu} placement="bottomRight">
-                  <Avatar icon="user" src={apiurl + user.avatar} style={{border:'2px solid #fff',padding:1,backgroundColor:'#f90'}} />
+                  <Avatar icon="user" src={baseurl + user.avatar} style={{border:'2px solid #fff',padding:1,backgroundColor:'#f90'}} />
                 </Dropdown>
               ) : (
                 <Button.Group size="small">

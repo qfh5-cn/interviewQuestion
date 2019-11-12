@@ -16,7 +16,7 @@ import {
 import { withUser } from "@/utils/hoc";
 import Api from "@/api";
 import { UPDATE_USER_INFO } from "@/store/action/common";
-import { formItemLayout, tailFormItemLayout, apiurl } from "@/global.config";
+import { formItemLayout, tailFormItemLayout, baseurl } from "@/global.config";
 
 @withUser
 @Form.create({ name: "register" })
@@ -168,7 +168,7 @@ class Info extends Component {
               listType="picture-card"
               // className="avatar-uploader"
               showUploadList={false}
-              action={apiurl + "/upload/avatar"}
+              action={baseurl + "/upload/avatar"}
               // beforeUpload={beforeUpload}
               onChange={({file})=>{
                 // 上传完成后重新更新用户信息
@@ -178,7 +178,7 @@ class Info extends Component {
                 }
               }}
             ><Tooltip title="点击上传头像">
-                <Avatar shape="square" size={128} icon="user" src={user.avatar ? apiurl + user.avatar:null} />
+                <Avatar shape="square" size={128} icon="user" src={user.avatar ? baseurl + user.avatar:null} />
             </Tooltip>
             </Upload>
             <h4>{user.username}</h4>

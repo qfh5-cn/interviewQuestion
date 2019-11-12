@@ -12,6 +12,7 @@ import {
   Form,
   Rate,
   AutoComplete,
+  Tag,
   //Select
 } from "antd";
 import MyTags from "@@/MyTags";
@@ -29,8 +30,8 @@ class Add extends Component {
     category: [],
     addType: "multiple",
     iqs: [],
-    companyList:[]
-    // tags: []
+    companyList:[],
+    tags: [],
     // detail:{},
   };
 
@@ -161,7 +162,7 @@ class Add extends Component {
     return current.name;
   };
 
-  changeTags = tags => {
+  changeTags = tags => {console.log(tags)
     this.setState({
       tags
     });
@@ -179,8 +180,6 @@ class Add extends Component {
 
     // 获取所有公司
     let { data:companyList } = await Api.get("/company");
-
-    // 获取所有tags
 
     this.setState({
       category,
@@ -215,7 +214,7 @@ class Add extends Component {
     // console.log("componentDidUpdate:", nextState);
   }
   render() {
-    let { iqs, category, addType, detail, showCompany,companyList } = this.state;
+    let { iqs, category, addType, detail, showCompany,companyList,tags } = this.state;
 
     let { getFieldDecorator, getFieldValue } = this.props.form;
 
@@ -348,6 +347,7 @@ class Add extends Component {
                 {getFieldDecorator("tags", {
                   initialValue: []
                 })(<MyTags onChange={this.changeTags} />)}
+                
               </Form.Item>
               <Form.Item label="问题补充（选填）">
                 {getFieldDecorator("detail", {
