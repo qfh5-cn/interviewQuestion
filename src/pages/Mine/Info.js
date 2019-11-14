@@ -13,9 +13,8 @@ import {
   AutoComplete,
   message
 } from "antd";
-import { withUser } from "@/utils/hoc";
+import { withUser,getUserInfo } from "@/utils";
 import Api from "@/api";
-import { UPDATE_USER_INFO } from "@/store/action/common";
 import { formItemLayout, tailFormItemLayout, baseurl } from "@/global.config";
 
 @withUser
@@ -35,10 +34,7 @@ class Info extends Component {
     }
     this.setState({ autoCompleteResult });
   };
-  getUserInfo = ()=>{
-    let { dispatch,user } = this.props;
-    dispatch({ type: UPDATE_USER_INFO + "_ASYNC", userid: user._id });
-  }
+
   handleSubmit = e => {
     let { form, user } = this.props;
     e.preventDefault();
@@ -47,7 +43,7 @@ class Info extends Component {
         let { data } = await Api.patch(`/user/${user._id}`, { ...values });
 
         // 重新更新用户信息
-        this.getUserInfo();
+        getUserInfo(user_id);
       }
     });
   };
@@ -173,7 +169,7 @@ class Info extends Component {
               onChange={({file})=>{
                 // 上传完成后重新更新用户信息
                 if(file.status === 'done'){
-                  this.getUserInfo();
+                  getUserInfo(user._id);
                   message.success('头像更新成功');
                 }
               }}

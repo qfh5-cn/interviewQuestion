@@ -164,7 +164,7 @@ class App extends Component {
           </Menu.Item>
           <Menu.Item key="/mine/focus">
             <Icon type="heart" />
-            我的关注
+            我的收藏
           </Menu.Item>
         </Menu>
         <Button type="primary" size="small" ghost block onClick={logout}>

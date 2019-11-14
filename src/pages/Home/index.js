@@ -156,7 +156,7 @@ class Home extends Component {
           title="最新面试题"
           data={newlist}
           gotoList={this.gotoList.bind(this, "sort=addtime")}
-          gotoDetail={this.gotoDetail}
+          onClick={this.gotoDetail}
           date
         />
         <h3>热门面试题</h3>

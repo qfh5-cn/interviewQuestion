@@ -13,7 +13,7 @@ class InfiniteList extends Component {
     loading: false,
     hasMore: true
   };
-  loadMore = async () => {console.log('loadmore')
+  loadMore = async () => {
     let { data, page } = this.state;
     this.setState({
       loading: true
@@ -27,7 +27,7 @@ class InfiniteList extends Component {
       loading: false
     });
   };
-  getData = async () => {console.log('getData')
+  getData = async () => {
     let { data, page, size } = this.state;
     let { api } = this.props;
 
@@ -44,8 +44,8 @@ class InfiniteList extends Component {
     return newData;
   };
   componentDidUpdate(nextProps) {
-    let { api } = this.props; //console.log('componentDidUpdate:',api.url,nextProps.api.url)
-    if (nextProps.api.url != api.url) {
+    let { api } = this.props;
+    if (nextProps.api.url != api.url || JSON.stringify(nextProps.api.params)!=JSON.stringify(api.params)) {
       this.setState({ data: [], page: 1 }, () => {
         this.getData();
         // 解决与InfiniteScroll同时发起page=1请求的问题
@@ -54,7 +54,7 @@ class InfiniteList extends Component {
     }
   }
   render() {
-    let { data, page, hasMore,loading } = this.state;
+    let { data, page, hasMore,loading } = this.state;console.log('data:',data,this.props.data)
     return (
       <InfiniteScroll
         pageStart={page}

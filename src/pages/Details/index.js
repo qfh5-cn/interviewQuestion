@@ -18,8 +18,8 @@ import moment from "moment";
 import MyTags from "@@/MyTags";
 
 import Api from "@/api";
-import { withUser } from "@/utils";
-import { UPDATE_USER_INFO } from "../../store/action/common";
+import { withUser,getUserInfo } from "@/utils";
+import {baseurl} from '@/global.config';
 import ReEditor from "re-editor";
 import "re-editor/lib/styles/index.css";
 import "./Details.scss";
@@ -168,7 +168,7 @@ class Details extends Component {
   // 添加/取消关注
   add2Focus = async () => {
     let { data } = this.state;
-    let { user, dispatch,history } = this.props;
+    let { user} = this.props;
     let url = `/user/${user._id}/follow`;
     if (user.focus && user.focus.includes(data._id)) {
       url = `/user/${user._id}/unfollow`;
@@ -178,14 +178,13 @@ class Details extends Component {
     });
 
     // user.focus.push(data._id);
-    dispatch({ type: UPDATE_USER_INFO + "_ASYNC", userid: user._id });
-
-    console.log("+关注：", user.focus, data._id);
+    getUserInfo(user._id);
   };
 
   render() {
     let { data, action, submitting, value, answer } = this.state;
     let { user, history } = this.props;
+    const IS_LOGIN = !!user.Authorization;console.log('islogin',IS_LOGIN)
 
     const Like = ({ type = "like", title = "赞", item }) => (
       <Tooltip title={title}>
@@ -225,7 +224,7 @@ class Details extends Component {
                 <Typography.Text
                   type="secondary"
                   onClick={() => {
-                    history.push("/iq?userid=" + user._id);
+                    history.push("/iq?userid=" + data.user._id);
                   }}
                 >
                   @{data.user && (data.user.nickname || data.user.username)}
@@ -234,15 +233,15 @@ class Details extends Component {
             </p>
           </Col>
           <Col span={6} style={{ textAlign: "right" }}>
-            <Tooltip title={focused ? "取消关注" : "+关注"}>
-              <Icon
-                disabled
-                type="heart"
-                style={{ fontSize: 20 }}
-                twoToneColor={focused ? "#999" : "#f00"}
-                theme="twoTone"
+            <Tooltip title={focused ? "取消收藏" : "+添加到收藏夹"}>
+              <Button
+                disabled={IS_LOGIN ? false : true}
+                icon={focused ? "minus" : "plus"}
+                type="dashed"
+                style={{fontSize:12}}
                 onClick={this.add2Focus}
-              />
+                size="small"
+              >{focused ? "取消" : "收藏"}</Button>
             </Tooltip>
           </Col>
         </Row>
@@ -283,7 +282,7 @@ class Details extends Component {
               author={<a>{item.user.nickname || item.user.username}</a>}
               avatar={
                 <Avatar
-                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                  src={baseurl + item.user.avatar}
                   alt={item.user.username}
                 />
               }

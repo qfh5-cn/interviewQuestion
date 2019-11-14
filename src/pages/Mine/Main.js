@@ -30,7 +30,7 @@ class Mine extends Component {
       {
         name: "focus",
         icon: "heart",
-        text: "关注面试题"
+        text: "我的收藏"
       }
     ],
     myIQ: {
@@ -168,13 +168,13 @@ class Mine extends Component {
           title="我的面试题" 
           data={myIQ.result} 
           gotoList={this.goto.bind(this,'/mine/iq')} 
-          gotoDetail={this.gotoIQ}
+          onClick={this.gotoIQ}
         />
         <DataList 
           title="我的回答" 
           data={myAnswer.result} 
           gotoList={this.goto.bind(this,'/mine/answer')} 
-          gotoDetail={this.gotoIQ}
+          onClick={this.gotoIQ}
           date
         />
       </div>

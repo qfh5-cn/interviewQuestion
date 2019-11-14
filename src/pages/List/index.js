@@ -77,7 +77,7 @@ class List extends Component {
           title="面试题列表"
           subTitle={title}
           api={{ url: pathname, params }}
-          gotoDetail={id => {
+          onClick={id => {
             history.push(`/iq/${id}`);
           }}
           goBack={()=>history.goBack()}
