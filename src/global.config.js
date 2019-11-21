@@ -21,6 +21,19 @@ export const tailFormItemLayout = {
   }
 };
 
+export const Styles={
+  pdx:'0 10px',
+  container:{
+    height:'100vh',
+    overflow:'auto'
+  },
+  content:{
+    padding:'0 10px',
+    overflowY:'auto',
+    overflowX:'hidden'
+  }
+}
+
 export const baseurl =
   process.env.NODE_ENV === "development" ? 
     "http://localhost:3000" // 开发环境(api服务器与web服务器分开)

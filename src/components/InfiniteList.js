@@ -1,11 +1,14 @@
 import React, { Component } from "react";
+import {findDOMNode} from 'react-dom'
 import { Spin, Icon } from "antd";
 import moment from "moment";
 moment.locale("zh-cn");
 import Api from "@/api";
 import InfiniteScroll from "react-infinite-scroller";
 import DataList from "./DataList";
+import MyContext from '@/utils/context';
 class InfiniteList extends Component {
+  static contextType = MyContext;
   state = {
     data: this.props.data || [],
     page: 1,
@@ -54,12 +57,15 @@ class InfiniteList extends Component {
     }
   }
   render() {
-    let { data, page, hasMore,loading } = this.state;console.log('data:',data,this.props.data)
+    let { data, page, hasMore,loading } = this.state;
     return (
       <InfiniteScroll
         pageStart={page}
         loadMore={this.loadMore}
         hasMore={!loading && hasMore}
+        useWindow={false}
+        // getScrollParent={()=>document.querySelector('#content')}
+        getScrollParent={()=>findDOMNode(this.context.Content)}
         loader={
           <Spin
             key={page}
@@ -69,7 +75,7 @@ class InfiniteList extends Component {
           />
         }
       >
-        <DataList {...this.props} data={data} />
+        <DataList {...this.props} data={data} pagination={false} />
       </InfiniteScroll>
     );
   }

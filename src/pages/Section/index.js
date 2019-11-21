@@ -3,7 +3,7 @@ import { Tabs} from "antd";
 const { TabPane } = Tabs;
 
 import Api from "@/api";
-import TableList from "@@/TableList";
+import DataList from "@@/DataList";
 
 class Section extends Component {
   state = {
@@ -61,7 +61,7 @@ class Section extends Component {
                 {
                   item.data 
                   ? 
-                  <TableList data={item.data.result} pagination={{
+                  <DataList data={item.data.result} pagination={{
                     pageSize,
                     total:item.data.total,
                     onChange:(page,pageSize)=>{
@@ -72,7 +72,7 @@ class Section extends Component {
                     }
                   }} />
                   :
-                  <TableList />
+                  <DataList />
                 }
                 
               </TabPane>

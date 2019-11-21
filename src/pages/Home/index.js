@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Carousel, Row, Col, Icon, Divider, Badge } from "antd";
-import TableList from "@@/TableList";
+import { Row, Col, Icon, Divider, Badge,Rate } from "antd";
+// import TableList from "@@/TableList";
 import DataList from "@@/DataList";
 import Api from "@/api";
 import { connect } from "react-redux";
@@ -49,9 +49,6 @@ class Home extends Component {
   gotoList = query => {
     this.goto(`/iq?${query}`);
   };
-  gotoDetail = id => {
-    this.goto(`/iq/${id}`);
-  };
 
   async componentDidMount() {
     // 获取热门面试题
@@ -97,7 +94,7 @@ class Home extends Component {
     } = this.state;
     return (
       <div className="home">
-        <Carousel afterChange={this.onChange} autoplay>
+        {/* <Carousel afterChange={this.onChange} autoplay>
           {recommend.map(item => {
             return (
               <div
@@ -108,8 +105,8 @@ class Home extends Component {
               </div>
             );
           })}
-        </Carousel>
-        <Row gutter={16} style={{ marginTop: 30 }}>
+        </Carousel> */}
+        <Row gutter={16}>
           {menu.map(item => {
             return (
               <Col key={item.name} span={6}>
@@ -151,18 +148,27 @@ class Home extends Component {
             );
           })}
         </Row>
-        <Divider />
+        <Divider style={{marginBottom:0}} />
         <DataList
           title="最新面试题"
           data={newlist}
           gotoList={this.gotoList.bind(this, "sort=addtime")}
-          onClick={this.gotoDetail}
           date
         />
-        <h3>热门面试题</h3>
-        <TableList data={hotlist} pagination={false} />
-        <h3>重点难点面试题</h3>
-        <TableList data={difficulty} pagination={false} />
+        <DataList
+          title="热门面试题"
+          data={hotlist}
+          gotoList={this.gotoList.bind(this, "sort=hot")}
+        />
+        <DataList
+          title="重点难点面试题"
+          rowNumber={false}
+          data={difficulty}
+          gotoList={this.gotoList.bind(this, "sort=difficulty")}
+          description={{difficulty:item=><>难度：<Rate value={item.difficulty} style={{fontSize:16}} disabled character={<Icon type="star" />} /></>}}
+        />
+        {/* <TableList data={hotlist} pagination={false} title="热门面试题" />
+        <TableList data={difficulty} pagination={false} title="重点难点面试题" /> */}
       </div>
     );
   }

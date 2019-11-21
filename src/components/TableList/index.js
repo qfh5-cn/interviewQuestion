@@ -1,6 +1,6 @@
 import React from "react";
 import {withRouter} from 'react-router-dom';
-import { Button, Table,Rate,Icon } from "antd";
+import { Button, Table,Rate,Icon,PageHeader } from "antd";
 
 import './TableList.scss'
 
@@ -13,7 +13,7 @@ let defaultPagination = {
   showSizeChanger:true,
   showTotal:total=>`共${total}条`,
 }
-function TableList({ data = defaultData,history,pagination,onClick }) {
+function TableList({ data = defaultData,history,pagination,onClick,title,gotoList }) {
   // 合并pagination选项
   pagination = pagination===false ? false :{
     ...defaultPagination,
@@ -25,17 +25,29 @@ function TableList({ data = defaultData,history,pagination,onClick }) {
     }
   }
   const columns = [
-    {
-      title: "#",
-      dataIndex:"rowNumber",
-      render(text, row, idx) {
-        return idx + 1;
-      }
-    },
+    // {
+    //   title: "#",
+    //   dataIndex:"rowNumber",
+    //   width:20,
+    //   render(text, row, idx) {
+    //     return idx + 1;
+    //   }
+    // },
     {
       title: "面试题",
       dataIndex: "question",
-      width:400,
+      
+      render(text, row, idx){
+        return <>
+          <h4>{text}</h4>
+          <div style={{fontSize:12,color:'#999'}}>
+           <span>{row.hot}浏览</span> &bull; <span>{row.answer}回答</span> &bull; 
+            <span style={{marginLeft:5}}>
+            难度：<Rate value={row.difficulty} style={{fontSize:16}} disabled character={<Icon type="star" />} />
+            </span>
+          </div>
+        </>
+      },
     },
     // {
     //   title: "阶段",
@@ -46,22 +58,23 @@ function TableList({ data = defaultData,history,pagination,onClick }) {
     //     </Button>;
     //   }
     // },
-    {
-      title: "难度",
-      dataIndex: "difficulty",
-      render(text){
-        return <Rate value={text} style={{margin:0,fontSize:16}} disabled character={<Icon type="star" />} />
-      },
-      sorter: (a, b) => b.difficulty - a.difficulty,
-    },
-    {
-      title: "热度",
-      dataIndex: "hot",
-      sorter: (a, b) => b.hot - a.hot,
-    },
+    // {
+    //   title: "难度",
+    //   dataIndex: "difficulty",
+    //   render(text){
+    //     return <Rate value={text} style={{margin:0,fontSize:16}} disabled character={<Icon type="star" />} />
+    //   },
+    //   sorter: (a, b) => b.difficulty - a.difficulty,
+    // },
+    // {
+    //   title: "热度",
+    //   dataIndex: "hot",
+    //   sorter: (a, b) => b.hot - a.hot,
+    // },
     // {
     //   title: "操作",
     //   dataIndex: "actions",
+    //   width:100,
     //   render(text,row,idx) {
     //     return (
     //       <Button.Group size="small">
@@ -78,19 +91,35 @@ function TableList({ data = defaultData,history,pagination,onClick }) {
     // }
   ];
   return (
-    <Table
-      dataSource={data}
-      columns={columns}
-      pagination={pagination}
-      rowKey="_id"
-      size="middle"
-      className="iq-list"
-      onRow={(record,index) => {
-        return {
-          onClick:onClick.bind(this,record,index), // 点击行
-        };
-      }}
-    />
+    <>
+    {title ? (
+      <PageHeader
+          style={{ paddingLeft: 0, paddingRight: 0 }}
+          title={title}
+          extra={
+            gotoList ? (
+              <Button type="link" onClick={gotoList}>
+                更多
+                <Icon type="right" />
+              </Button>
+            ) : null
+          }
+        />
+      ) : null}
+      <Table
+        dataSource={data}
+        columns={columns}
+        pagination={pagination}
+        rowKey="_id"
+        size="middle"
+        className="iq-list"
+        onRow={(record,index) => {
+          return {
+            onClick:onClick.bind(this,record,index), // 点击行
+          };
+        }}
+      />
+    </>
   );
 }
 

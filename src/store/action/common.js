@@ -3,6 +3,7 @@ export const LOGOUT = 'LOGOUT';
 export const UPDATE_USER_INFO = 'UPDATE_USER_INFO';
 export const SHOW_BREADCRUMB = 'SHOW_BREADCRUMB';
 export const CHANGE_BREADCRUMB_PATH = 'CHANGE_BREADCRUMB_PATH';
+export const CHANGE_FOOTER_STATUS = 'CHANGE_FOOTER_STATUS';
 
 /**
  * ----------
@@ -40,10 +41,20 @@ export function showBreadcrumb(show){
         show
     }
 }
-export function changeBreadcrumb(path){
+export function changeBreadcrumb(pages){
     return {
         type:CHANGE_BREADCRUMB_PATH,
-        path
+        pages
+    }
+}
+
+/**
+ * 布局显示隐藏
+ */
+export function changeFooterStatus(show){
+    return {
+        type:CHANGE_FOOTER_STATUS,
+        show
     }
 }
 

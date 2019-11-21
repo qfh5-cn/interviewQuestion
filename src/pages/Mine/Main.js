@@ -54,9 +54,6 @@ class Mine extends Component {
     //   }
     // ]
   };
-  gotoIQ = id => {
-    this.goto(`/iq/${id}`);
-  };
   goto = path => {
     let { history } = this.props;
     history.push(path);
@@ -168,14 +165,13 @@ class Mine extends Component {
           title="我的面试题" 
           data={myIQ.result} 
           gotoList={this.goto.bind(this,'/mine/iq')} 
-          onClick={this.gotoIQ}
         />
         <DataList 
           title="我的回答" 
           data={myAnswer.result} 
           gotoList={this.goto.bind(this,'/mine/answer')} 
-          onClick={this.gotoIQ}
           date
+          description={{hot:false,answer:false,question:item=>`@${item.iq.question}`}}
         />
       </div>
     );

@@ -1,28 +1,50 @@
 import React from "react";
+import {withRouter} from 'react-router'
 import { PageHeader, Row, Col, Icon, List, Button } from "antd";
 import moment from "moment";
+import './DataList.module.scss';
 moment.locale("zh-cn");
+
+let defaultPagination = {
+  size: "small",
+  // pageSize:5,
+  pageSizeOptions: ["5", "10", "20"],
+  showSizeChanger:true,
+  showTotal:total=>`共${total}条`,
+}
+let defaultDescription = {hot:'浏览',answer:'回答'}
+
 function DataList({
   title,
   subTitle,
+  rowNumber=true,//行号
   data,
   gotoList,
   onClick,
   goBack,
-  date,
-  actions = [<Icon type="right" />]
+  date, //显示日期
+  description={},
+  pagination=false,
+  actions = [<Icon type="right" />],
+  history
 }) {
+  if(!onClick){
+    onClick = id=>{
+      history.push(`/iq/${id}`)
+    }
+  }
+  if(!goBack){
+    goBack = id=>{
+      history.goBack()
+    }
+  }
+  if(pagination){
+    pagination = Object.assign({},defaultPagination,pagination)
+  }
+  description = Object.assign({},defaultDescription,description)
   return (
-    <div>
+    <div className="datalist">
       {title ? (
-        // <Row>
-        //     <Col span={16}>
-        //         <h3>{title}</h3>
-        //     </Col>
-        //     <Col span={8} style={{ textAlign: "right" }}>
-        //         {gotoList ? <Button type="link" onClick={gotoList}>更多<Icon type="right" /></Button>:null}
-        //     </Col>
-        // </Row>
         <PageHeader
           style={{ paddingLeft: 0, paddingRight: 0 }}
           onBack={goBack}
@@ -41,14 +63,26 @@ function DataList({
 
       <List
         dataSource={data}
+        pagination={pagination}
         renderItem={(item, idx) => {
-          let discription = item.iq ? `@${item.iq.question}` : ``;
+          let descriptionKeys = Object.keys(description).filter(key=>description[key]!==false);
+          let descriptionItem = descriptionKeys.map((key,idx)=>{
+            let content = typeof description[key]=== 'function' ? 
+            description[key](item) : item[key] + description[key];
+            return idx<descriptionKeys.length-1?<span key={key}>{content} &bull; </span>:<span key={key}>{content}</span>
+          })
           let content;
           if (date) {
+            let addtime = moment(item.addtime);
             if (typeof date === "boolean") {
-              content = moment(item.addtime).fromNow();
+              let now = moment();
+              if(now.diff(addtime,'days')>3){
+                content = addtime.format('YYYY/MM/DD');
+              }else{
+                content = addtime.fromNow();
+              }
             } else {
-              content = moment(item.addtime).format(date);
+              content = addtime.format(date);
             }
           }
           return (
@@ -59,8 +93,9 @@ function DataList({
               onClick={onClick&&onClick.bind(this, item.iqid || item._id)}
             >
               <List.Item.Meta
-                title={`${idx + 1}. ${item.question || item.content}`}
-                description={discription}
+                avatar={rowNumber?<span>{idx + 1}</span>:null}
+                title={`${item.question || item.content}`}
+                description={descriptionItem}
               />
               <div>{content}</div>
             </List.Item>
@@ -70,4 +105,5 @@ function DataList({
     </div>
   );
 }
+DataList = withRouter(DataList);
 export default DataList;

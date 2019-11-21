@@ -1,9 +1,10 @@
-import {LOGIN,LOGOUT,UPDATE_USER_INFO,CHANGE_BREADCRUMB_PATH,SHOW_BREADCRUMB} from '../action/common';
+import {LOGIN,LOGOUT,UPDATE_USER_INFO,CHANGE_BREADCRUMB_PATH,SHOW_BREADCRUMB,CHANGE_FOOTER_STATUS} from '../action/common';
 import Immutable,{Map,List} from 'immutable';
 
 let initState = Map({
     breadcrumb:List([]),
-    user:Map({})
+    user:Map({}),
+    showFooter:true
 })
 
 // 刷新后，redux数据丢失，从localStorage中重新获取
@@ -32,7 +33,9 @@ function commonReducer(state=initState,action){
             return state.update('user',()=>Map(newData));
 
         case CHANGE_BREADCRUMB_PATH:
-            return state.update('breadcrumb',()=>List(action.path));
+            return state.update('breadcrumb',()=>List(action.pages));
+        case CHANGE_FOOTER_STATUS:
+            return state.update('showFooter',()=>action.show);
         default:
             return state;
     }

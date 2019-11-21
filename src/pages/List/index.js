@@ -3,7 +3,10 @@ import { Tag } from "antd";
 import qs from "querystring";
 import InfiniteList from "@@/InfiniteList";
 import Api from "@/api";
+import {connect} from 'react-redux';
+import {changeFooterStatus} from '@/store/action/common'
 
+@connect()
 class List extends Component {
   state = {
     title: "",
@@ -12,7 +15,8 @@ class List extends Component {
   };
   async componentDidMount() {
     let {
-      location: { search }
+      location: { search },
+      dispatch
     } = this.props;
 
     let params = qs.parse(search.slice(1));
@@ -40,9 +44,17 @@ class List extends Component {
       );
     }
 
+    // 隐藏Footer
+    dispatch(changeFooterStatus(false))
+
     this.setState({
       title
     });
+  }
+  componentWillUnmount(){
+
+    // 显示Footer
+    this.props.dispatch(changeFooterStatus(true))
   }
   render() {
     let { title } = this.state;
@@ -74,13 +86,9 @@ class List extends Component {
           subTitle={<>{title}的面试题</>}
         /> */}
         <InfiniteList
-          title="面试题列表"
+          title="面试题"
           subTitle={title}
           api={{ url: pathname, params }}
-          onClick={id => {
-            history.push(`/iq/${id}`);
-          }}
-          goBack={()=>history.goBack()}
           date={dateFormat}
         />
       </div>

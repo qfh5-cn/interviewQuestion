@@ -13,16 +13,21 @@ function MyList({ user, history, location: { search, pathname } }) {
   let params = qs.parse(search.slice(1));
   params.userid = user._id;
   let title = "我的面试题";
+  let actions;
+  let description
   if (url === "/answer") {
     params.getiqname = 1;
     title = "我的回答";
+    description = {hot:false,answer:false,question:item=>`@${item.iq.question}`}
   } else if (url === "/focus") {
     url = '/iq/byid';
     params.ids = user.focus;
     title = "我的收藏";
+    description={answer:false}
+    actions = [<Tooltip title="取消收藏"><Button data-id="delete" shape="circle" icon="delete" size="small"></Button></Tooltip>]
   }
 
-console.log('myList',params)
+
   return (
     <InfiniteList
       title={title}
@@ -42,7 +47,8 @@ console.log('myList',params)
           history.push(`/iq/${id}`);
         }
       }}
-      actions={[<Tooltip title="取消收藏"><Button data-id="delete" shape="circle" icon="delete" size="small"></Button></Tooltip>]}
+      description={description}
+      actions={actions}
     />
   );
 }

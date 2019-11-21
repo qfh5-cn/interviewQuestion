@@ -1,0 +1,12 @@
+.datalist{
+    .ant-rate-star:not(:last-child){
+        margin:0
+    } 
+    .ant-list-item-meta-avatar{
+        >span{font-size:20px;}
+    }
+    .ant-list-item-meta-description{color:#aaa;font-size:12px;}
+    .ant-list-item:first-child .ant-list-item-meta-avatar{color:#c00}
+    .ant-list-item:nth-child(2) .ant-list-item-meta-avatar{color:#f60}
+    .ant-list-item:nth-child(3) .ant-list-item-meta-avatar{color:#c60}
+}

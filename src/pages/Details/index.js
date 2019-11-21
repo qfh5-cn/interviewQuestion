@@ -18,8 +18,8 @@ import moment from "moment";
 import MyTags from "@@/MyTags";
 
 import Api from "@/api";
-import { withUser,getUserInfo } from "@/utils";
-import {baseurl} from '@/global.config';
+import { withUser, getUserInfo } from "@/utils";
+import { baseurl } from "@/global.config";
 import ReEditor from "re-editor";
 import "re-editor/lib/styles/index.css";
 import "./Details.scss";
@@ -56,9 +56,9 @@ class Details extends Component {
     action: null,
     submitting: false,
     value: "",
-    answer: {
-      result: []
-    }
+    answer: [],
+    user: {},
+    company: []
   };
   addAnswer = async () => {
     let { user, history, location } = this.props;
@@ -90,11 +90,10 @@ class Details extends Component {
     this.setState({
       submitting: false,
       value: "",
-      answer: { ...answer, result: [...answer.result, newData] }
+      answer: [...answer, newData]
     });
   };
   changeAnswer = e => {
-    // Vue是一个渐进式框架，采用MVVM模式来实现视图层与数据层的数据更新、监听与修改
     this.setState({
       value: e.currentTarget.value
     });
@@ -115,7 +114,7 @@ class Details extends Component {
       userid: user._id
     });
 
-    answer.result = answer.result.map(it => {
+    answer = answer.map(it => {
       if (it._id === item._id) {
         let atype = type === "like" ? "dislike" : "like";
         //添加当前用户的赞/踩
@@ -140,7 +139,10 @@ class Details extends Component {
     data = data[0];
     this.setState({
       data,
-      id
+      id,
+      answer: data.answer,
+      company: data.company,
+      user: data.user
     });
 
     // 增加热度
@@ -154,21 +156,21 @@ class Details extends Component {
     });
 
     // 获取面试题对应答案
-    let { data: answer } = await Api.get(`/answer`, {
-      iqid: id,
-      getusername: 1
-      // userid: this.props.user._id,//必须这种写法，解构user后user._id 不生效（why?）
-    });
+    // let { data: answer } = await Api.get(`/answer`, {
+    //   iqid: id,
+    //   getusername: 1
+    //   // userid: this.props.user._id,//必须这种写法，解构user后user._id 不生效（why?）
+    // });
 
-    this.setState({
-      answer
-    });
+    // this.setState({
+    //   answer
+    // });
   }
 
   // 添加/取消关注
   add2Focus = async () => {
     let { data } = this.state;
-    let { user} = this.props;
+    let { user } = this.props;
     let url = `/user/${user._id}/follow`;
     if (user.focus && user.focus.includes(data._id)) {
       url = `/user/${user._id}/unfollow`;
@@ -182,9 +184,9 @@ class Details extends Component {
   };
 
   render() {
-    let { data, action, submitting, value, answer } = this.state;
+    let { data, user: author, submitting, value, answer, company } = this.state;
     let { user, history } = this.props;
-    const IS_LOGIN = !!user.Authorization;console.log('islogin',IS_LOGIN)
+    const IS_LOGIN = !!user.Authorization;
 
     const Like = ({ type = "like", title = "赞", item }) => (
       <Tooltip title={title}>
@@ -204,47 +206,59 @@ class Details extends Component {
     const focused = user.focus && user.focus.includes(data._id);
     return (
       <div>
-        <Row>
-          <Col span={18}>
-            <h1>{data.question}</h1>
-            <p className="belong">
-              {data.company ? (
-                <Tooltip title="查看该公司所有面试题">
-                  <Typography.Text
-                    type="secondary"
-                    onClick={() => {
-                      history.push("/iq?companyid=" + data.company._id);
-                    }}
-                  >
-                    @{data.company.name}
-                  </Typography.Text>
-                </Tooltip>
-              ) : null}
-              <Tooltip title="查看该用户所有面试题">
-                <Typography.Text
-                  type="secondary"
-                  onClick={() => {
-                    history.push("/iq?userid=" + data.user._id);
-                  }}
-                >
-                  @{data.user && (data.user.nickname || data.user.username)}
-                </Typography.Text>
-              </Tooltip>
-            </p>
+        <Row style={{ marginBottom: 20 }}>
+          <Col span={12}>
+            <Button
+              type="link"
+              icon="arrow-left"
+              style={{ paddingLeft: 0 }}
+              onClick={() => {
+                history.goBack();
+              }}
+            >
+              返回
+            </Button>
           </Col>
-          <Col span={6} style={{ textAlign: "right" }}>
+          <Col span={12} style={{ textAlign: "right" }}>
             <Tooltip title={focused ? "取消收藏" : "+添加到收藏夹"}>
               <Button
                 disabled={IS_LOGIN ? false : true}
                 icon={focused ? "minus" : "plus"}
                 type="dashed"
-                style={{fontSize:12}}
+                style={{ fontSize: 12 }}
                 onClick={this.add2Focus}
                 size="small"
-              >{focused ? "取消" : "收藏"}</Button>
+              >
+                {focused ? "取消" : "收藏"}
+              </Button>
             </Tooltip>
           </Col>
         </Row>
+        <h1>{data.question}</h1>
+        <p className="belong">
+          {company.map(item => (
+            <Tooltip title="查看该公司所有面试题" key={item._id}>
+              <Typography.Text
+                type="secondary"
+                onClick={() => {
+                  history.push("/iq?companyid=" + item._id);
+                }}
+              >
+                @{item.name}
+              </Typography.Text>
+            </Tooltip>
+          ))}
+          <Tooltip title="查看该用户所有面试题">
+            <Typography.Text
+              type="secondary"
+              onClick={() => {
+                history.push("/iq?userid=" + data.user._id);
+              }}
+            >
+              @{author.nickname || author.username}
+            </Typography.Text>
+          </Tooltip>
+        </p>
         {data.detail ? (
           <div className="iqmore">
             <ReEditor value={data.detail} readOnly tools={[]} />
@@ -259,43 +273,61 @@ class Details extends Component {
           {data.tags ? (
             <li>
               Tags：
-              <MyTags value={data.tags} disabled onClick={(tag)=>{
-                history.push(`/iq?tag=${tag}`)
-              }} />
+              <MyTags
+                value={data.tags}
+                disabled
+                onClick={tag => {
+                  history.push(`/iq?tag=${tag}`);
+                }}
+              />
             </li>
           ) : null}
         </ul>
 
-        {answer.result.length === 0 ? (
+        {answer.length === 0 ? (
           <Empty
             description="面试题暂无答案，期待你的完善"
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         ) : (
-          answer.result.map(item => (
-            <Comment
-              key={item._id}
-              actions={[
-                <Like item={item} key="like" />,
-                <Dislike item={item} key="dislike" />
-              ]}
-              author={<a>{item.user.nickname || item.user.username}</a>}
-              avatar={
-                <Avatar
-                  src={baseurl + item.user.avatar}
-                  alt={item.user.username}
-                />
-              }
-              content={item.content}
-              datetime={
-                <Tooltip
-                  title={moment(item.addtime).format("YYYY-MM-DD HH:mm:ss")}
-                >
-                  <span>{moment(item.addtime).fromNow()}</span>
-                </Tooltip>
-              }
-            />
-          ))
+          answer.map(item => {
+            let addtime = moment(item.addtime);
+            let now = moment();
+            return (
+              <Comment
+                key={item._id}
+                actions={[
+                  <Like item={item} key="like" />,
+                  <Dislike item={item} key="dislike" />
+                ]}
+                author={
+                  item.user && <a>{item.user.nickname || item.user.username}</a>
+                }
+                avatar={
+                  item.user && (
+                    <Avatar
+                      src={baseurl + item.user.avatar}
+                      alt={item.user.username}
+                    />
+                  )
+                }
+                content={item.content}
+                datetime={
+                  <Tooltip
+                    title={moment(item.addtime).format("YYYY-MM-DD HH:mm:ss")}
+                  >
+                    <span>
+                    {
+                      now.diff(addtime,'days')>3 ? 
+                      addtime.format('YYYY/MM/DD') :
+                      addtime.fromNow()
+                    }
+                    </span>
+                  </Tooltip>
+                }
+              />
+            );
+          })
         )}
 
         <Editor
