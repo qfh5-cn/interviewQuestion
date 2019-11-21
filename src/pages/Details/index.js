@@ -22,7 +22,7 @@ import { withUser, getUserInfo } from "@/utils";
 import { baseurl } from "@/global.config";
 import ReEditor from "re-editor";
 import "re-editor/lib/styles/index.css";
-import "./Details.scss";
+import "./style.scss";
 
 // 自定义评论框
 const Editor = ({ onChange, onSubmit, submitting, value, disabled }) => (

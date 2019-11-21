@@ -5,7 +5,7 @@ import DataList from "@@/DataList";
 import Api from "@/api";
 import { connect } from "react-redux";
 
-import "./home.scss";
+import "./style.scss";
 
 @connect()
 class Home extends Component {

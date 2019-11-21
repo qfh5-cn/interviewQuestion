@@ -2,7 +2,7 @@ import React from "react";
 import {withRouter} from 'react-router-dom';
 import { Button, Table,Rate,Icon,PageHeader } from "antd";
 
-import './TableList.scss'
+import './style.scss'
 
 let defaultData = [
 ];
