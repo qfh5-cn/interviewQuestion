@@ -1,6 +1,7 @@
 import axios,{CancelToken} from 'axios';
 import store from '../store';
 import {apiurl} from '../global.config';
+import{message} from 'antd'
 // const CancelToken = axios.CancelToken;
 // const source = CancelToken.source();console.log('source',source)
 let pending = {};

@@ -65,22 +65,13 @@ class List extends Component {
     let dateFormat = params.sort === 'addtime'?true:"YYYY/MM/DD"
 
     return (
-      <div>
-        {/* <PageHeader
-          style={{paddingLeft:0}}
-          onBack={() => {
-            history.goBack();
-          }}
-          title="面试题列表"
-          subTitle={<>{title}的面试题</>}
-        /> */}
         <InfiniteList
           title="面试题"
           subTitle={title}
           api={{ url: pathname, params }}
           date={dateFormat}
+          goBack
         />
-      </div>
     );
   }
 }

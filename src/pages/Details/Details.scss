@@ -2,3 +2,14 @@
     span{margin:0 5px;}
     span:hover{text-decoration: underline;cursor: pointer;}
 }
+.list-attr{
+    font-size:14px;color:#999;
+    >span{margin:0 8px;}
+    >span:first-child{margin-left:0;}
+    .ant-rate-star{margin:0;}
+}
+.ant-divider-inner-text{font-size:14px;}
+.ant-comment-avatar{
+    img{width:100%;height:auto;}
+}
+.ant-btn-link{color:inherit;}

@@ -12,10 +12,10 @@ import {
   message,
   Row,
   Col,
-  Typography
+  Tag,
+  Divider
 } from "antd";
 import moment from "moment";
-import MyTags from "@@/MyTags";
 
 import Api from "@/api";
 import { withUser, getUserInfo } from "@/utils";
@@ -235,58 +235,51 @@ class Details extends Component {
           </Col>
         </Row>
         <h1>{data.question}</h1>
-        <p className="belong">
-          {company.map(item => (
-            <Tooltip title="查看该公司所有面试题" key={item._id}>
-              <Typography.Text
-                type="secondary"
-                onClick={() => {
-                  history.push("/iq?companyid=" + item._id);
-                }}
-              >
-                @{item.name}
-              </Typography.Text>
-            </Tooltip>
-          ))}
-          <Tooltip title="查看该用户所有面试题">
-            <Typography.Text
-              type="secondary"
-              onClick={() => {
-                history.push("/iq?userid=" + data.user._id);
-              }}
-            >
-              @{author.nickname || author.username}
-            </Typography.Text>
-          </Tooltip>
-        </p>
+        {data.tags ? (
+            <div>
+              Tags：
+              {data.tags.map(tag=><Tag key={tag} >
+                {tag.length > 20 ? `${tag.slice(0, 20)}...` : tag}
+              </Tag>)}
+            </div>
+          ) : null}
+
         {data.detail ? (
           <div className="iqmore">
             <ReEditor value={data.detail} readOnly tools={[]} />
           </div>
-        ) : null}
-        <ul className="list-attr">
-          <li>热度：{data.hot}</li>
-          <li>
-            难度：
-            <Rate value={data.difficulty} disabled />
-          </li>
-          {data.tags ? (
-            <li>
-              Tags：
-              <MyTags
-                value={data.tags}
-                disabled
-                onClick={tag => {
-                  history.push(`/iq?tag=${tag}`);
-                }}
-              />
-            </li>
-          ) : null}
-        </ul>
+        ) : <Empty
+          description="暂无问题补充"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />}
 
+        <div className="list-attr">
+          <span onClick={() => {
+            history.push("/iq?userid=" + author._id);
+          }}>
+            <Tooltip title="点击查看该用户所有面试题">
+              <Avatar size="small" src={baseurl + author.avatar} icon="user" /> {author.nickname || author.username}
+            </Tooltip>
+          </span> &bull; 
+          <span>{data.hot} 浏览 </span> &bull; 
+          <span>
+            难度：
+            <Rate value={data.difficulty} style={{fontSize:18}} disabled />
+          </span>
+          {company.map(item => (
+            <span key={item._id} onClick={() => {
+              history.push("/iq?companyid=" + item._id);
+            }}>
+            <Tooltip title="查看该公司所有面试题">
+                @{item.name}
+            </Tooltip>
+            </span>
+          ))}
+        </div>
+        <Divider orientation="left">回 复（{answer.length}）</Divider>
         {answer.length === 0 ? (
           <Empty
-            description="面试题暂无答案，期待你的完善"
+            description="问题暂无任何回复，请你帮帮TA吧！"
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         ) : (
@@ -307,7 +300,8 @@ class Details extends Component {
                   item.user && (
                     <Avatar
                       src={baseurl + item.user.avatar}
-                      alt={item.user.username}
+                      icon="user"
+                      size="small"
                     />
                   )
                 }

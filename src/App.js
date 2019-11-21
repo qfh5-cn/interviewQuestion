@@ -121,15 +121,23 @@ class App extends Component {
     let {
       location: { pathname },
       changeBreadcrumb
-    } = this.props;
+    } = this.props;console.log('pathname:',pathname)
     let homePage = {path:'/home',text:'首页'}
-    let elsePages = [{path:'/search',text:'搜索'},{path:'/iq',text:'面试题列表'}]
+    let elsePages = [{path:'/search',text:'搜索'},{path:'/iq/',text:'面试题'},{path:'/iq',text:'面试题列表'}]
     let allPages = [...this.state.menu,...elsePages]
     let currentPage = allPages.filter(item => pathname.startsWith(item.path))[0];
+
+    let breadcrumbList = [];
+    // if(pathname.)
     if(currentPage){
-      let breadcrumbList = currentPage.path.startsWith('/home')?[currentPage]:[homePage,currentPage]
-      changeBreadcrumb(breadcrumbList);
+      // 不显示面包屑导航
+      if(/^\/(?:home|iq\/)/.test(currentPage.path)){
+        breadcrumbList = [currentPage];
+      }else{
+        breadcrumbList = [homePage,currentPage];
+      }
     }
+    changeBreadcrumb(breadcrumbList);
 
     this.setState({
       current: [pathname]

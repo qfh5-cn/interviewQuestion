@@ -33,7 +33,7 @@ function DataList({
       history.push(`/iq/${id}`)
     }
   }
-  if(!goBack){
+  if(goBack===true){
     goBack = id=>{
       history.goBack()
     }

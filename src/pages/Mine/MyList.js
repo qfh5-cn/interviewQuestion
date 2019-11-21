@@ -49,6 +49,7 @@ function MyList({ user, history, location: { search, pathname } }) {
       }}
       description={description}
       actions={actions}
+      goBack
     />
   );
 }
