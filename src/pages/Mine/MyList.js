@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { withUser,getUserInfo } from "@/utils";
+import { withUser,getUserInfo,withFooter } from "@/utils";
 import qs from 'querystring';
 import InfiniteList from "@@/InfiniteList";
 import {Button,Tooltip} from "antd";
@@ -54,4 +54,5 @@ function MyList({ user, history, location: { search, pathname } }) {
 }
 MyList = withRouter(MyList);
 MyList = withUser(MyList);
+MyList = withFooter(MyList);
 export default MyList;

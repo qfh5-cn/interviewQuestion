@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { Tag, List, Input, Divider } from "antd";
+import { Tag, Divider } from "antd";
 import Api from "@/api";
 import DataList from "@@/DataList";
+import {withFooter} from '@/utils';
 
 import './style.scss';
 
+@withFooter
 class Search extends Component {
   state = {
     category: [],

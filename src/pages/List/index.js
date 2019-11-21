@@ -3,10 +3,9 @@ import { Tag } from "antd";
 import qs from "querystring";
 import InfiniteList from "@@/InfiniteList";
 import Api from "@/api";
-import {connect} from 'react-redux';
-import {changeFooterStatus} from '@/store/action/common'
+import {withFooter} from '@/utils';
 
-@connect()
+@withFooter
 class List extends Component {
   state = {
     title: "",
@@ -15,8 +14,7 @@ class List extends Component {
   };
   async componentDidMount() {
     let {
-      location: { search },
-      dispatch
+      location: { search }
     } = this.props;
 
     let params = qs.parse(search.slice(1));
@@ -44,22 +42,13 @@ class List extends Component {
       );
     }
 
-    // 隐藏Footer
-    dispatch(changeFooterStatus(false))
-
     this.setState({
       title
     });
   }
-  componentWillUnmount(){
-
-    // 显示Footer
-    this.props.dispatch(changeFooterStatus(true))
-  }
   render() {
     let { title } = this.state;
     let {
-      history,
       location: { search, pathname }
     } = this.props;
     let paths = pathname.split(/\b(?=\/)/);

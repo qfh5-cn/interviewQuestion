@@ -1,7 +1,7 @@
 import React,{ Component } from "react";
 import Api from '@/api';
 import { connect } from "react-redux";
-import {login,logout} from '../store/action/common'
+import {login,logout,changeFooterStatus} from '../store/action/common'
 
 /**
  * 
@@ -42,14 +42,8 @@ export function withAuth(InnerComponent){
             return true;
 
         }
-        componentDidUpdate(nextProps){
-            if(!nextProps.user._id){
-                // this.props.dispatch(logout());
-                // this.gotoLogin();
-            }
-        }
         render(){
-            return <InnerComponent {...this.props}/>
+            return <InnerComponent {...this.props}>{this.props.children}</InnerComponent>
         }
     }
 
@@ -78,13 +72,34 @@ export function withUser(InnerComponent){
             // }            
         // }
         render(){
-            return <InnerComponent {...this.props}/>
+            return <InnerComponent {...this.props}>{this.props.children}</InnerComponent>
         }
     }
     return WrapComponent;
 }
 
+/**
+ * 显示隐藏底部高阶组件
+ */
+export function withFooter(InnerComponent){
+    @connect()
+    class WrapComponent extends Component{
+        componentDidMount(){
+            // 隐藏Footer
+            this.props.dispatch(changeFooterStatus(false))
+        }
+        componentWillUnmount(){
+            // 显示Footer
+            this.props.dispatch(changeFooterStatus(true))
+        }
+        render(){
+            return <InnerComponent {...this.props}>{this.props.children}</InnerComponent>
+        }
+    }
+    return WrapComponent
+}
 export default {
     withAuth,
-    withUser
+    withUser,
+    withFooter
 }
