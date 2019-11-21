@@ -1,67 +1,88 @@
 import React, { Component } from "react";
-import { Tag, List, Input } from "antd";
+import { Tag, List, Input, Divider } from "antd";
 import Api from "@/api";
-import DataList from '@@/DataList'
+import DataList from "@@/DataList";
+
+import './style.scss';
 
 class Search extends Component {
   state = {
     category: [],
-    keyword: "vue",
+    keyword: "",
     datalist: [],
     loading: false,
-    hasMore: true
+    hasMore: true,
+    tagList: []
   };
-  componentDidMount() {
-    this.getData()
+  async componentDidMount() {
+    this.getData();
+
+    let { data: tagList } = await Api.get("/iq/tags", { size: 5 });
+    tagList.sort((a, b) => b.value - a.value);
+    this.setState({
+      tagList
+    });
   }
-  componentDidUpdate(prevProps){
-    if(this.props.location.search != prevProps.location.search){
-      this.getData()
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search != prevProps.location.search) {
+      this.getData();
     }
   }
-  getData = async (keyword,page=1,size=10)=>{
-    if(!keyword){
-      let {location} = this.props;
-      keyword = location.search.match(/(?<=keyword\=)\w+/);
-      keyword = keyword ? keyword[0] : ''
+  getData = async (keyword, page = 1, size = 10) => {
+    if (!keyword) {
+      let { location } = this.props;
+      keyword = location.search.match(/(?<=keyword\=).+/);
+      keyword = keyword ? decodeURI(keyword[0]) : "";
     }
-    let { data } = await Api.get("/search", { keyword,page, size});
-    let {total,size:pageSize,result:datalist} = data;
+    let { data } = await Api.get("/search", { keyword, page, size });
+    let { total, size: pageSize, result: datalist } = data;
     this.setState({
       keyword,
       datalist,
       total,
       pageSize
     });
-  }
-  changeKeyword = (e)=>{
-    this.setState({
-        keyword:e.currentTarget.value
-    })
-  }
+  };
+
   render() {
-    let { datalist, pageSize, total, category, keyword } = this.state;
+    let { history } = this.props;
+    let { datalist, pageSize, total, category, keyword, tagList } = this.state;
     return (
       <div>
-        {/* <Input.Search
-          placeholder="输入关键字查找面试题"
-          enterButton="查找"
-          size="large"
-          value={keyword}
-          onChange={this.changeKeyword}
-          onSearch={value => this.getData(value)}
-        /> */}
+        {/* 热门搜索 */}
+        <div className="hot-keyword">
+          热门搜索：
+          {tagList.map(tag => {
+            return (
+              <Tag.CheckableTag
+                key={tag.text}
+                checked={tag.text===keyword}
+                onChange={checked => {
+                  if (checked) {
+                    history.push("/search?keyword=" + tag.text);
+                  }
+
+                  // this.setState({ tags });
+                }}
+              >
+                {tag.text}
+                {/* {checked ? <Icon type="close" style={{ color: "#fff" }} /> : null} */}
+              </Tag.CheckableTag>
+            );
+          })}
+        </div>
+        <Divider />
         <DataList
-        data={datalist}
-        pagination={{
-          total,
-          onChange:(page,pageSize)=>{
-            this.getData(keyword,page,pageSize);
-          },
-          onShowSizeChange:(page, pageSize)=>{
-            this.getData(keyword,page,pageSize);
-          }
-        }}
+          data={datalist}
+          pagination={{
+            total,
+            onChange: (page, pageSize) => {
+              this.getData(keyword, page, pageSize);
+            },
+            onShowSizeChange: (page, pageSize) => {
+              this.getData(keyword, page, pageSize);
+            }
+          }}
         />
         {/* <List
           dataSource={data}

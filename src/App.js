@@ -136,6 +136,13 @@ class App extends Component {
     });
   }
 
+  changeKeyword = (e) => {
+    let keyword = typeof e==='string' ? e : e.currentTarget.value
+    this.setState({
+      keyword
+    });
+  };
+
   componentDidMount() {    
 
     // if (pathname != "/home") {
@@ -146,14 +153,14 @@ class App extends Component {
     // }
     this.getBreadcrumbList();
   }
-  componentDidUpdate(prevProps){console.log(this.props.location.pathname,prevProps.location.pathname)
+  componentDidUpdate(prevProps){
     if(this.props.location.pathname != prevProps.location.pathname){
       this.getBreadcrumbList()
     }
   }
 
   render() {
-    const { current, menu } = this.state;
+    let { current, menu,keyword='' } = this.state;
     let { user, logout, breadcrumb,location,showFooter } = this.props;
     const usermenu = (
       <div style={{ padding: 10, borderRadius: 5, backgroundColor: "#fff" }}>
@@ -191,10 +198,9 @@ class App extends Component {
       </div>
     );
     const searchPage = location.pathname === '/search';
-    let keyword = '';
-    if(searchPage){
-      let keyword = location.search.match(/(?<=keyword\=)\w+/)
-      keyword = keyword ? keyword[0]:'';
+    if(searchPage&&!keyword){
+      keyword = location.search.match(/(?<=keyword\=).+/);
+      keyword = keyword ? decodeURI(keyword[0]):'';
     }
     return (
       <Layout style={Styles.container}>
@@ -241,9 +247,9 @@ class App extends Component {
                   placeholder="输入关键字查找面试题"
                   // enterButton="查找"
                   size="small"
-                  defaultValue={keyword}
+                  value={keyword}
                   onChange={this.changeKeyword}
-                  onSearch={keyword => {console.log('keyword',keyword)
+                  onSearch={keyword => {
                     this.goto(`/search?keyword=${keyword}`)
                   }}
                   style={{verticalAlign:'middle'}}
