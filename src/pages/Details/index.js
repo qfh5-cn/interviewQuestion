@@ -235,7 +235,7 @@ class Details extends Component {
           </Col>
         </Row>
         <h1>{data.question}</h1>
-        {data.tags ? (
+        {data.tags&&data.tags.length>0 ? (
             <div>
               Tags：
               {data.tags.map(tag=><Tag key={tag} >

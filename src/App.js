@@ -43,6 +43,8 @@ const List = lazy(() => import("~/List"));
 const Search = lazy(() => import("~/Search"));
 const Company = lazy(() => import("~/Company"));
 const Tags = lazy(() => import("~/Tags"));
+const ForgotPassword = lazy(() => import("~/ForgotPassword"));
+const ResetPassword = lazy(() => import("~/ResetPassword"));
 
 import MyBreadcrumb from "@@/MyBreadcrumb";
 import { withUser } from "./utils";
@@ -275,9 +277,9 @@ class App extends Component {
                 </Tooltip>
               }
             </Col>
-            <Col span={3} style={{ textAlign: "right" }}>
+            <Col span={3} style={{ textAlign: "right",color:'#1890ff',height:64,overflow:'hidden' }}>
               {user.username ? (
-                <Dropdown overlay={usermenu} placement="bottomRight">
+                <Dropdown overlay={usermenu} placement="bottomRight" onClick={this.goto.bind(this,'/mine')}>
                   <Avatar
                     icon="user"
                     src={baseurl + user.avatar}
@@ -321,6 +323,7 @@ class App extends Component {
               >
                 <Switch>
                   <Route path="/home" component={Home} />
+                  <Redirect from="/" to="/home" exact />
                   <Route path="/random" component={Random} />
                   <Route path="/section" component={Section} />
                   <Route path="/add" component={Add} />
@@ -333,10 +336,13 @@ class App extends Component {
                   <Route path="/company" component={Company} />
                   <Route path="/tags" component={Tags} />
                   <Route
-                    path="/forgotpwd"
-                    render={() => <div>忘记密码找laoxie</div>}
+                    path="/forgotpassword"
+                    component={ForgotPassword}
                   />
-                  <Redirect from="/" to="/home" exact />
+                  <Route
+                    path="/resetpassword"
+                    component={ResetPassword}
+                  />
                   <Route render={() => <div>404</div>} />
                 </Switch>
               </Suspense>

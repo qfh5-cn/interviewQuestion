@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tag } from "antd";
+import { Tag,Rate,Icon } from "antd";
 import qs from "querystring";
 import InfiniteList from "@@/InfiniteList";
 import Api from "@/api";
@@ -19,12 +19,16 @@ class List extends Component {
 
     let params = qs.parse(search.slice(1));
 
-    let title;
+    let title,description;
+    // 时间格式展示
+    let dateFormat = params.sort === 'addtime'?true:"YYYY/MM/DD"
     // 根据传入参数定义标题
     if (params.sort === "addtime") {
       title = "最新添加";
     } else if (params.sort === "difficulty") {
       title = "重点难点";
+      dateFormat=false;
+      description={difficulty:item=><>难度：<Rate value={item.difficulty} style={{fontSize:16}} disabled character={<Icon type="star" />} /></>}
     }else if (params.companyid) {
       // 根据id获取公司名称
       let { data } = await Api.get(`/company/${params.companyid}`);
@@ -43,11 +47,13 @@ class List extends Component {
     }
 
     this.setState({
-      title
+      title,
+      description,
+      dateFormat
     });
   }
   render() {
-    let { title } = this.state;
+    let { title,description,dateFormat } = this.state;
     let {
       location: { search, pathname }
     } = this.props;
@@ -61,8 +67,7 @@ class List extends Component {
       params.keyword = params.tag;
     }
 
-    // 时间格式展示
-    let dateFormat = params.sort === 'addtime'?true:"YYYY/MM/DD"
+    
 
     return (
         <InfiniteList
@@ -70,6 +75,7 @@ class List extends Component {
           subTitle={title}
           api={{ url: pathname, params }}
           date={dateFormat}
+          description={description}
           goBack
         />
     );

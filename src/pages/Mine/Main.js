@@ -29,7 +29,7 @@ class Mine extends Component {
       // },
       {
         name: "focus",
-        icon: "heart",
+        icon: "star",
         text: "我的收藏"
       }
     ],
