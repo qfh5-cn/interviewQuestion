@@ -4,7 +4,7 @@ import Api from "@/api";
 import { connect } from "react-redux";
 import { login } from "@/store/action/common";
 import qs from "querystring";
-import CryptoJS from "crypto-js";
+import { encryptPassword } from "@/utils";
 import { formItemLayout, tailFormItemLayout } from "@/global.config";
 
 // const mapStateToProps = (state)=>({})
@@ -24,11 +24,12 @@ class Random extends Component {
         // let decrypt = CryptoJS.AES.decrypt(encrypt.toString(), 'laoxie');
         // console.log('decrypt:',decrypt.toString(CryptoJS.enc.Utf8))
 
-        let encrypt = CryptoJS.SHA256(password);
+        // let encrypt = CryptoJS.SHA256(password);
+        password = encryptPassword(password)
 
         let result = await Api.get("/user/login", {
           username,
-          password: encrypt.toString()
+          password
         });
 
         if (result.status === 400) {

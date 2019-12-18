@@ -50,7 +50,7 @@ class ForgotPassword extends Component {
 
     return (
       <div>
-        <h1>重置密码</h1>
+        <h1>找回密码</h1>
         <Steps size="small" style={{margin:'25px 0'}} current={currentStep}>
             <Steps.Step title="填写用户名"></Steps.Step>
             <Steps.Step title="登录安全邮箱"></Steps.Step>

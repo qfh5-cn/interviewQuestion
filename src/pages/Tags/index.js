@@ -9,12 +9,12 @@ class Tags extends Component {
   };
   async componentDidMount() {
     let { data } = await Api.get("/iq/tags");
+    
     this.setState({ taglist: data });
   }
   getCallback = type => {
     let { history } = this.props;
     return function(word, event) {
-      console.log(word, event);
       const isActive = type !== "onWordMouseOut";
       const element = event.target;
       element.onclick = () => {
@@ -22,15 +22,15 @@ class Tags extends Component {
           history.push(`/iq?tag=${word.text}`);
         }
       };
-    //   element.style.cssText = `
-    //  background-color:#fff;
-    //  font-size=${isActive ? "300%" : "100%"};
-    //  text-decoration=${isActive ? "underline" : "none"};
-    //  `;
-    // element.setAttribute('transition',"all 0.5s")
-    // element.setAttribute('background-color',"white");
-    // element.setAttribute('font-size',isActive ? "300%" : "100%");
-    element.setAttribute('text-decoration',isActive ? "underline" : "none");
+      //   element.style.cssText = `
+      //  background-color:#fff;
+      //  font-size=${isActive ? "300%" : "100%"};
+      //  text-decoration=${isActive ? "underline" : "none"};
+      //  `;
+      // element.setAttribute('transition',"all 0.5s")
+      // element.setAttribute('background-color',"white");
+      // element.setAttribute('font-size',isActive ? "300%" : "100%");
+      element.setAttribute("text-decoration", isActive ? "underline" : "none");
     };
   };
 

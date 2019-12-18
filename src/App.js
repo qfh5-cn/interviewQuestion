@@ -14,7 +14,9 @@ import {
   Avatar,
   Tooltip,
   Spin,
-  Input
+  Input,
+  Badge,
+
 } from "antd";
 const { Header, Footer, Content } = Layout;
 
@@ -172,6 +174,12 @@ class App extends Component {
   render() {
     let { current, menu,keyword='' } = this.state;
     let { user, logout, breadcrumb,location,showFooter } = this.props;
+    // 添加提示信息Badge
+    let newMessage = [];
+    // 是否设置安全邮箱
+    if(!user.email){
+      newMessage.push('noEmail')
+    }
     const usermenu = (
       <div style={{ padding: 10, borderRadius: 5, backgroundColor: "#fff" }}>
         <h4 style={{ paddingLeft: 16 }}>{user.nickname || user.username}</h4>
@@ -186,8 +194,10 @@ class App extends Component {
           }}
         >
           <Menu.Item key="/mine">
-            <Icon type="profile" />
-            个人中心
+            <Badge count={newMessage.length}>
+              <Icon type="profile" />
+              个人中心
+            </Badge>
           </Menu.Item>
           <Menu.Item key="/mine/iq">
             <Icon type="unordered-list" />
@@ -277,9 +287,10 @@ class App extends Component {
                 </Tooltip>
               }
             </Col>
-            <Col span={3} style={{ textAlign: "right",color:'#1890ff',height:64,overflow:'hidden' }}>
+            <Col span={3} style={{ textAlign: "right",color:'#1890ff',height:64 }}>
               {user.username ? (
                 <Dropdown overlay={usermenu} placement="bottomRight" onClick={this.goto.bind(this,'/mine')}>
+                 <Badge dot={newMessage.length>0}>
                   <Avatar
                     icon="user"
                     src={baseurl + user.avatar}
@@ -289,6 +300,7 @@ class App extends Component {
                       backgroundColor: "#f90"
                     }}
                   />
+                  </Badge>
                 </Dropdown>
               ) : (
                 <Button.Group size="small">
@@ -351,8 +363,9 @@ class App extends Component {
         </Content>
         {
           showFooter?
-          <Footer style={{ textAlign: "center" }}>
-            &copy; 千锋 &bull; 广州H5
+          <Footer style={{ textAlign: "center",fontSize:12 }}>
+            &copy; 千锋 &bull; 广州H5 &nbsp; 
+            <a style={{color:'#999'}} href="http://www.beian.gov.cn/portal/registerSystemInfo" target="_blank">粤ICP备19149048号</a>
           </Footer>
           :
           null

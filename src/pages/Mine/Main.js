@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Icon, Divider } from "antd";
+import { Row, Col, Icon, Divider, message,Alert } from "antd";
 import Api from "@/api";
 import { withAuth } from "@/utils";
 import DataList from '@@/DataList'
@@ -108,9 +108,20 @@ class Mine extends Component {
   }
   render() {
     let { menu, myIQ, myAnswer } = this.state;
-    let { match,user } = this.props;
+    let { match,user,history } = this.props;
     return (
       <div>
+        {
+          !user.email ? 
+          <Alert
+            message={<span>请尽快<a onClick={()=>{history.push('/mine/info')}}>设置安全邮箱</a>，可用于找回密码等操作！</span>}
+            type="error"
+            showIcon
+            closable
+          />
+          :
+          null
+        }
         <Row gutter={16}>
           {menu.map(item => {
             return (

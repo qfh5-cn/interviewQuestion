@@ -46,7 +46,8 @@ class Password extends Component{
                   {
                     required: true,
                     message: "请输入密码"
-                  }
+                  },
+                  {min:6,message:'为了账号安全，密码至少为6位'}
                 ]
               })(<Input.Password />)}
             </Form.Item>

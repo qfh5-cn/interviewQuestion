@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Form, Input, Checkbox,Modal } from "antd";
 import Api from "@/api";
 import clauseContent from './clauseContent';
-import CryptoJS from 'crypto-js';
+import { encryptPassword } from "@/utils";
 import { formItemLayout, tailFormItemLayout } from "@/global.config";
 
 @Form.create({ name: "register" })
@@ -39,10 +39,11 @@ class Reg extends Component {
         console.log("Received values of form: ", values);
         let {username,password} = values;
         
-        let encrypt = CryptoJS.SHA256(password);
-        password = encrypt.toString();
+        // let encrypt = CryptoJS.SHA256(password);
+        // password = encrypt.toString();
+        password = encryptPassword(password);
         
-        let data = await Api.post('/user/reg',{username,password});console.log(data)
+        let data = await Api.post('/user/reg',{username,password});
         if(data.status === 200){
           history.replace('/login');
         }
@@ -72,7 +73,7 @@ class Reg extends Component {
     callback();
   };
   checkUsernameExist = async (rule, value, callback)=>{
-    let data = await Api.get('/user/reg/check',{username:value});
+    let data = await Api.get('/user/check',{username:value});
     if(data.status === 400){
         callback('用户名已存在');
     }else{

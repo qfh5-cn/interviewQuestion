@@ -15,7 +15,7 @@ import {
 } from "antd";
 import { withUser,getUserInfo } from "@/utils";
 import Api from "@/api";
-import { formItemLayout, tailFormItemLayout, baseurl } from "@/global.config";
+import { formItemLayout, tailFormItemLayout, baseurl,apiurl } from "@/global.config";
 
 @withUser
 @Form.create({ name: "register" })
@@ -43,7 +43,7 @@ class Info extends Component {
         let { data } = await Api.patch(`/user/${user._id}`, { ...values });
 
         // 重新更新用户信息
-        getUserInfo(user_id);
+        getUserInfo(user._id);
       }
     });
   };
@@ -164,7 +164,7 @@ class Info extends Component {
               listType="picture-card"
               // className="avatar-uploader"
               showUploadList={false}
-              action={baseurl + "/upload/avatar"}
+              action={apiurl + "/upload/avatar"}
               // beforeUpload={beforeUpload}
               onChange={({file})=>{
                 // 上传完成后重新更新用户信息
