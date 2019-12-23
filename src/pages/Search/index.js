@@ -33,8 +33,11 @@ class Search extends Component {
   getData = async (keyword, page = 1, size = 10) => {
     if (!keyword) {
       let { location } = this.props;
-      keyword = location.search.match(/(?<=keyword\=).+/);
-      keyword = keyword ? decodeURI(keyword[0]) : "";
+      // 零宽正向后行断言（FF，safari不支持）
+      // keyword = location.search.match(/(?<=keyword\=).+/);
+      // keyword = keyword ? decodeURI(keyword[0]) : "";
+      let idx = location.search.indexOf('keyword=');
+      keyword = decodeURI(location.search.slice(idx+8));
     }
     let { data } = await Api.get("/search", { keyword, page, size });
     let { total, size: pageSize, result: datalist } = data;

@@ -219,8 +219,10 @@ class App extends Component {
     );
     const searchPage = location.pathname === '/search';
     if(searchPage&&!keyword){
-      keyword = location.search.match(/(?<=keyword\=).+/);
-      keyword = keyword ? decodeURI(keyword[0]):'';
+      // keyword = location.search.match(/(?<=keyword\=).+/);
+      // keyword = keyword ? decodeURI(keyword[0]):'';
+      let idx = location.search.indexOf('keyword=');
+      keyword = decodeURI(location.search.slice(idx+8));
     }
     return (
       <Layout style={Styles.container}>
