@@ -6,6 +6,7 @@ tools/
 dist/
 
 ##过滤文件
+__*.*
 package-lock.json
 stats.json
 *.zip

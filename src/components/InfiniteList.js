@@ -6,9 +6,9 @@ moment.locale("zh-cn");
 import Api from "@/api";
 import InfiniteScroll from "react-infinite-scroller";
 import DataList from "./DataList";
-import MyContext from '@/utils/context';
+// import MyContext from '@/utils/context';
 class InfiniteList extends Component {
-  static contextType = MyContext;
+  // static contextType = MyContext;
   state = {
     data: this.props.data || [],
     page: 1,
@@ -64,8 +64,8 @@ class InfiniteList extends Component {
         loadMore={this.loadMore}
         hasMore={!loading && hasMore}
         useWindow={false}
-        // getScrollParent={()=>document.querySelector('#content')}
-        getScrollParent={()=>findDOMNode(this.context.Content)}
+        getScrollParent={()=>document.querySelector('#content')}
+        // getScrollParent={()=>findDOMNode(this.context.Content)}
         loader={
           <Spin
             key={page}

@@ -104,7 +104,7 @@ const DataList = ({
                 onClick={(e)=>{
                   // 修复不可选中文字的bug
                   if(Math.abs(e.pageX-e.currentTarget.x)<5){
-                    onClick&&onClick(item.iqid || item._id);
+                    onClick&&onClick(item.iqid || item._id,e);
                   }
                 }}
               >
