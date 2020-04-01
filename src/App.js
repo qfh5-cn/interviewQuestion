@@ -16,6 +16,7 @@ const Login = lazy(() => import("~/Login"));
 const List = lazy(() => import("~/List"));
 const Search = lazy(() => import("~/Search"));
 const Company = lazy(() => import("~/Company"));
+const CompanyDetails = lazy(() => import("~/Company/Details"));
 const Tags = lazy(() => import("~/Tags"));
 const ForgotPassword = lazy(() => import("~/ForgotPassword"));
 const ResetPassword = lazy(() => import("~/ResetPassword"));
@@ -45,7 +46,8 @@ const App = () => {
           <Route path="/iq/:id" component={Details} />
           <Route path="/reg" component={Reg} />
           <Route path="/login" component={Login} />
-          <Route path="/company" component={Company} />
+          <Route path="/company" component={Company} exact/>
+          <Route path="/company/:id" component={CompanyDetails} />
           <Route path="/tags" component={Tags} />
           <Route path="/forgotpassword" component={ForgotPassword} />
           <Route path="/resetpassword" component={ResetPassword} />

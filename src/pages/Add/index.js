@@ -120,7 +120,7 @@ class Add extends Component {
     form.validateFieldsAndScroll(async (err, values) => {console.log('multiple:',values)
       if (!err) {
         let { iqs } = this.state;
-        let { company } = values;
+        let { company,summary } = values;
         // if (company) {
         //   iqs = iqs.map(item => {
         //     item.company = company;
@@ -132,7 +132,7 @@ class Add extends Component {
         //     return item;
         //   });
         // }
-        this.addIQ(iqs,{company});
+        this.addIQ(iqs,{company,summary});
       } else {
         // 设置后无法报错
         // form.setFieldsValue({iqs:''})
@@ -147,11 +147,11 @@ class Add extends Component {
       if (!err) {
         values.detail = values.detail.toJSON();
         console.log("single:", values);
-        let {company,category} = values;
+        let {company,category,summary} = values;
         // company以传参的方式写入，删除数据中的company属性
         delete values.company;
         if(category === '-1') delete values.category
-        this.addIQ([{ ...values }],{company});
+        this.addIQ([{ ...values }],{company,summary});
       } else {
       }
     });
@@ -364,9 +364,8 @@ class Add extends Component {
               </Form.Item>
             </>
           )}
-        </Form>
-        {/* 自动识别数据（分阶段） */}
-        {addType === "multiple" ? (
+           {/* 自动识别数据（分阶段） */}
+        {addType === "multiple"&&iqs.length>0 ? (
           <List
             style={{ margin: "15px 0" }}
             itemLayout="vertical"
@@ -405,6 +404,20 @@ class Add extends Component {
             )}
           />
         ) : null}
+          {
+            showCompany ? (
+              <Form.Item label="面试题总结">
+                {getFieldDecorator("summary", {})(
+                  <Input.TextArea
+                    placeholder="填写面试过程的感受，可以给其他小伙伴一个参考"
+                    autosize={{ minRows: 5 }}
+                  />
+                )}
+              </Form.Item>
+            ):null
+          }
+        </Form>
+       
         <Button size="large" type="primary" onClick={this["add_" + addType]}>
           添加
         </Button>

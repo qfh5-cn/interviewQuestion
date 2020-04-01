@@ -251,7 +251,7 @@ class Frame extends Component {
                 </Tooltip>
               }
             </Col>
-            <Col span={3} style={{ textAlign: "right",color:'#1890ff',height:64 }}>
+            <Col span={3} style={{ textAlign: "right",color:'#1890ff',height:64,overflow:'hidden' }}>
               {user.username ? (
                 <Dropdown overlay={usermenu} placement="bottomRight" onClick={this.goto.bind(this,'/mine')}>
                  <Badge dot={newMessage.length>0}>
@@ -292,7 +292,7 @@ class Frame extends Component {
         {
           showFooter?
           <Footer style={{ textAlign: "center",fontSize:12 }}>
-            &copy; 千锋 &bull; 广州H5 &nbsp; 
+            &copy; 广州 &bull; H5 &nbsp;
             <a style={{color:'#999'}} href="http://www.beian.gov.cn/portal/registerSystemInfo" target="_blank">粤ICP备19149048号</a>
           </Footer>
           :

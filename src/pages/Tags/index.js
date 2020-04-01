@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { PageHeader } from "antd";
+import { PageHeader, Badge, Row, Col } from "antd";
 import Api from "@/api";
-import ReactWordcloud from "react-wordcloud";
+// import ReactWordcloud from "react-wordcloud";
 
 class Tags extends Component {
   state = {
@@ -9,7 +9,7 @@ class Tags extends Component {
   };
   async componentDidMount() {
     let { data } = await Api.get("/iq/tags");
-    
+
     this.setState({ taglist: data });
   }
   getCallback = type => {
@@ -37,13 +37,13 @@ class Tags extends Component {
   render() {
     let { taglist } = this.state;
     let { history } = this.props;
-    const callbacks = {
-      onWordClick: this.getCallback("onWordClick"),
-      onWordMouseOut: this.getCallback("onWordMouseOut"),
-      onWordMouseOver: this.getCallback("onWordMouseOver")
-    };
+    // const callbacks = {
+    //   onWordClick: this.getCallback("onWordClick"),
+    //   onWordMouseOut: this.getCallback("onWordMouseOut"),
+    //   onWordMouseOver: this.getCallback("onWordMouseOver")
+    // };
     return (
-      <div>
+      <div class="taglist">
         <PageHeader
           style={{ paddingLeft: 0 }}
           onBack={() => {
@@ -52,7 +52,7 @@ class Tags extends Component {
           title="Tag标签"
           subTitle={<>热门tag标签</>}
         />
-        <ReactWordcloud
+        {/* <ReactWordcloud
           options={{
             rotations: 3,
             rotationAngles: [],
@@ -60,7 +60,16 @@ class Tags extends Component {
           }}
           words={taglist}
           callbacks={callbacks}
-        />
+        /> */}
+        <Row gutter={[10, 10]}>
+          {taglist.map(item => (
+            <Col xs={12} sm={8} md={6} lg={4} key={item.text} onClick={()=>{
+              history.push(`/iq?tag=${item.text}`);
+            }}>
+              <a>{item.text}（{item.value}）</a>
+            </Col>
+          ))}
+        </Row>
       </div>
     );
   }

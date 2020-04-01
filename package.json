@@ -42,6 +42,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-saga": "^1.1.1",
     "sass-loader": "^8.0.0",
+    "slate-html-serializer": "^0.8.11",
     "style-loader": "^1.0.0",
     "terser-webpack-plugin": "^2.2.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
@@ -51,7 +52,7 @@
     "webpack-dev-server": "^3.3.1"
   },
   "dependencies": {
-    "antd": "^3.23.2",
+    "antd": "^3.26.6",
     "axios": "^0.19.0",
     "immutable": "^4.0.0-rc.12"
   }

@@ -44,7 +44,8 @@ class Company extends Component {
         // this.getData();
 
         // 跳转到公司列表
-        history.push(`/iq?companyid=${currentCompany}`);
+        // history.push(`/iq?companyid=${currentCompany}`);
+        history.push(`/company/${currentCompany}`);
       }
     );
   };
@@ -86,7 +87,7 @@ class Company extends Component {
     });
   }
 
-  render() {
+  render() {console.log('compaynyList.render')
     let {
       companies,
       iqs,

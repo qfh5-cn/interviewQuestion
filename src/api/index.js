@@ -50,10 +50,14 @@ export async function patch(url,params){
 }
 
 export async function remove(url,params){
-    let {data} = await apiserver.delete(url,params,{
+    let {data} = await apiserver.delete(url,{
+        params,
         headers:{
             Authorization
-        }
+        },
+        cancelToken:new CancelToken(c=>{
+            pending[`delete_${url}`] = c;
+        })
     });
 
     return data;
