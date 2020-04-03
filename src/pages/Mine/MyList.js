@@ -27,16 +27,15 @@ function MyList({ user, history, location: { search, pathname } }) {
     actions = [<Tooltip title="取消收藏"><Button data-id="delete" shape="circle" icon="delete" size="small"></Button></Tooltip>]
   }
 
-
   return (
     <InfiniteList
       title={title}
+      data={[]}
       api={{ url, params }}
       // gotoDetail={id => {
       //   history.push(`/iq/${id}`);
       // }}
       onClick={async (id,e)=>{
-        // console.log(id,e.target,e)
         if(e.target.dataset.id === 'delete'){
           url = `/user/${user._id}/unfollow`;
           await Api.patch(url, {

@@ -94,7 +94,7 @@ class Frame extends Component {
     let {
       location: { pathname },
       changeBreadcrumb
-    } = this.props;console.log('pathname:',pathname)
+    } = this.props;
     let homePage = {path:'/home',text:'首页'}
     let elsePages = [{path:'/search',text:'搜索'},{path:'/iq/',text:'面试题'},{path:'/iq',text:'面试题列表'}]
     let allPages = [...this.state.menu,...elsePages]
@@ -292,7 +292,7 @@ class Frame extends Component {
         {
           showFooter?
           <Footer style={{ textAlign: "center",fontSize:12 }}>
-            &copy; 广州 &bull; H5 &nbsp;
+            &copy; 面试宝典 &nbsp;
             <a style={{color:'#999'}} href="http://www.beian.gov.cn/portal/registerSystemInfo" target="_blank">粤ICP备19149048号</a>
           </Footer>
           :

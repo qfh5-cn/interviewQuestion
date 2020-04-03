@@ -14,7 +14,7 @@ let defaultPagination = {
 }
 let defaultDescription = {hot:'浏览',answer:'回答'}
 
-let start = Date.now();console.log(start)
+let start = Date.now();
 
 const DataList = ({
   title,
@@ -30,7 +30,6 @@ const DataList = ({
   actions = [<Icon type="right" />],
   history
 })=> {
-  console.log(123)
   if(!onClick){
     onClick = id=>{
       history.push(`/iq/${id}`)
@@ -46,6 +45,7 @@ const DataList = ({
     pagination = Object.assign({},defaultPagination,pagination)
   }
   description = Object.assign({},defaultDescription,description)
+
   return (
     <div className="datalist">
       {title ? (
